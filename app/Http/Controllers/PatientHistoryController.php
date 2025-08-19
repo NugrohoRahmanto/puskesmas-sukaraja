@@ -23,7 +23,6 @@ class PatientHistoryController extends Controller
         return view('admin.patientsHistory.index', compact('histories'));
     }
 
-    // Menampilkan form edit riwayat pasien
     public function editAdmin($id_history)
     {
         if (Auth::check() && Auth::user()->role != 'admin') {
@@ -35,7 +34,6 @@ class PatientHistoryController extends Controller
         return view('admin.patientsHistory.edit', compact('history'));
     }
 
-    // Update riwayat pasien
     public function updateAdmin(Request $request, $id_history)
     {
         if (Auth::check() && Auth::user()->role != 'admin') {
@@ -58,7 +56,6 @@ class PatientHistoryController extends Controller
                          ->with('success', 'Riwayat pasien berhasil diperbarui.');
     }
 
-    // Hapus riwayat pasien
     public function destroyAdmin($id_history)
     {
         if (Auth::check() && Auth::user()->role != 'admin') {

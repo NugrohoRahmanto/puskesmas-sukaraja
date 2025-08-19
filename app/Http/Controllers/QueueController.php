@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\PatientHistory;
 use Carbon\Carbon;
 
-
 class QueueController extends Controller
 {
     public function index()
@@ -70,7 +69,6 @@ class QueueController extends Controller
         return redirect()->route('queues.index')->with('success', 'Antrian berhasil dihapus.');
     }
 
-    // Menampilkan semua antrian (Admin)
     public function indexAdmin()
     {
         if (Auth::check() && Auth::user()->role != 'admin') {
@@ -81,7 +79,6 @@ class QueueController extends Controller
         return view('admin.queues.index', compact('queues'));
     }
 
-    // Edit antrian (misal ubah nomor antrian)
     public function editAdmin($id_antrian)
     {
         if (Auth::check() && Auth::user()->role != 'admin') {
@@ -92,7 +89,6 @@ class QueueController extends Controller
         return view('admin.queues.edit', compact('queue'));
     }
 
-    // Update nomor antrian (admin)
     public function updateAdmin(Request $request, $id_antrian)
     {
         if (Auth::check() && Auth::user()->role != 'admin') {
@@ -111,7 +107,6 @@ class QueueController extends Controller
         return redirect()->route('admin.queues.indexAdmin')->with('success', 'Nomor antrian berhasil diperbarui.');
     }
 
-    // Hapus antrian (Admin) beserta pasien
     public function destroyAdmin($id_antrian)
     {
         if (Auth::check() && Auth::user()->role != 'admin') {
@@ -120,18 +115,15 @@ class QueueController extends Controller
 
         $queue = Queue::with('patient')->findOrFail($id_antrian);
 
-        // Hapus pasien terkait
         if ($queue->patient) {
             $queue->patient->delete();
         }
 
-        // Hapus antrian
         $queue->delete();
 
         return redirect()->route('admin.queues.indexAdmin')->with('success', 'Antrian dan pasien terkait berhasil dihapus.');
     }
 
-    // Call pasien (pindah ke history) dan hapus pasien
     public function callAdmin($id_antrian)
     {
         if (Auth::check() && Auth::user()->role != 'admin') {
@@ -142,7 +134,6 @@ class QueueController extends Controller
         $patient = $queue->patient;
 
         if ($patient) {
-            // Simpan ke history
             PatientHistory::create([
                 'nama_lengkap' => $patient->nama_lengkap,
                 'usia' => $patient->usia,
@@ -151,14 +142,11 @@ class QueueController extends Controller
                 'tanggal' => Carbon::today(),
             ]);
 
-            // Hapus pasien
             $patient->delete();
         }
 
-        // Hapus antrian
         $queue->delete();
 
         return redirect()->route('admin.queues.indexAdmin')->with('success', 'Pasien telah dipanggil, masuk ke riwayat, dan dihapus dari tabel pasien.');
     }
-
 }

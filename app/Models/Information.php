@@ -13,6 +13,9 @@ class Information extends Model
 
     protected $primaryKey = 'id_informasi';
 
+    public $incrementing = false; 
+    protected $keyType = 'string';   
+    
     protected static function booted()
     {
         static::creating(function ($info) {

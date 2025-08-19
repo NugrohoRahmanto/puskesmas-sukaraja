@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Storage;
 
 class InformationController extends Controller
 {
-    // Menampilkan semua informasi (admin)
     public function indexAdmin()
     {
         if (Auth::check() && Auth::user()->role != 'admin') {
@@ -22,7 +21,6 @@ class InformationController extends Controller
         return view('admin.informations.index', compact('infos'));
     }
 
-    // Form create
     public function createAdmin()
     {
         if (Auth::check() && Auth::user()->role != 'admin') {
@@ -33,7 +31,6 @@ class InformationController extends Controller
         return view('admin.informations.create');
     }
 
-    // Store create
     public function storeAdmin(Request $request)
     {
         if (Auth::check() && Auth::user()->role != 'admin') {
@@ -48,7 +45,6 @@ class InformationController extends Controller
             'cover' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Upload cover jika ada
         $coverName = null;
         if ($request->hasFile('cover')) {
             $file = $request->file('cover');
@@ -67,7 +63,6 @@ class InformationController extends Controller
             ->with('success', 'Informasi berhasil ditambahkan.');
     }
 
-    // Form edit
     public function editAdmin($id_informasi)
     {
         if (Auth::check() && Auth::user()->role != 'admin') {
@@ -79,7 +74,6 @@ class InformationController extends Controller
         return view('admin.informations.edit', compact('info'));
     }
 
-    // Update
     public function updateAdmin(Request $request, $id_informasi)
     {
         if (Auth::check() && Auth::user()->role != 'admin') {
@@ -96,9 +90,7 @@ class InformationController extends Controller
             'cover' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Upload cover baru jika ada dan hapus lama
         if ($request->hasFile('cover')) {
-            // Hapus file lama
             if ($info->cover && Storage::exists('public/covers/' . $info->cover)) {
                 Storage::delete('public/covers/' . $info->cover);
             }
@@ -118,7 +110,6 @@ class InformationController extends Controller
             ->with('success', 'Informasi berhasil diperbarui.');
     }
 
-    // Destroy
     public function destroyAdmin($id_informasi)
     {
         if (Auth::check() && Auth::user()->role != 'admin') {
@@ -128,7 +119,6 @@ class InformationController extends Controller
 
         $info = Information::findOrFail($id_informasi);
 
-        // Hapus file cover lama
         if ($info->cover && Storage::exists('public/covers/' . $info->cover)) {
             Storage::delete('public/covers/' . $info->cover);
         }

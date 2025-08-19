@@ -7,17 +7,16 @@ use Illuminate\Support\Facades\Auth;
 
 class SuggestionController extends Controller
 {
-     public function __construct()
+    public function __construct()
     {
         $this->middleware('auth');
     }
-    // Form tambah saran
+
     public function create()
     {
         return view('suggestions.create');
     }
 
-    // Simpan saran
     public function store(Request $request)
     {
         $request->validate([
@@ -32,7 +31,6 @@ class SuggestionController extends Controller
         return redirect()->route('dashboard')->with('success', 'Saran berhasil ditambahkan.');
     }
 
-    // Tampilkan semua saran (admin)
     public function indexAdmin()
     {
         if (Auth::check() && Auth::user()->role != 'admin') {
@@ -43,7 +41,6 @@ class SuggestionController extends Controller
         return view('admin.suggestions.index', compact('suggestions'));
     }
 
-    // Tampilkan form edit saran (admin)
     public function editAdmin($id_saran)
     {
         if (Auth::check() && Auth::user()->role != 'admin') {
@@ -54,7 +51,6 @@ class SuggestionController extends Controller
         return view('admin.suggestions.edit', compact('suggestion'));
     }
 
-    // Update saran (admin)
     public function updateAdmin(Request $request, $id_saran)
     {
         if (Auth::check() && Auth::user()->role != 'admin') {
@@ -71,7 +67,6 @@ class SuggestionController extends Controller
         return redirect()->route('admin.suggestions.indexAdmin')->with('success', 'Saran berhasil diperbarui.');
     }
 
-    // Hapus saran (admin)
     public function destroyAdmin($id_saran)
     {
         if (Auth::check() && Auth::user()->role != 'admin') {

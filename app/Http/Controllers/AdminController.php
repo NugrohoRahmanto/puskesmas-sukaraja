@@ -7,9 +7,6 @@ use Carbon\Carbon;
 use App\Models\Queue;
 use App\Models\PatientHistory;
 
-
-
-
 class AdminController extends Controller
 {
     public function __construct()
@@ -24,7 +21,6 @@ class AdminController extends Controller
         }
 
         $today = Carbon::today();
-        // dd($today);
         $queues = Queue::with('patient')
                             ->whereDate('tanggal', $today)
                             ->orderBy('no_antrian', 'asc')
@@ -43,7 +39,6 @@ class AdminController extends Controller
         $patient = $queue->patient;
 
         if ($patient) {
-            // Simpan ke history
             PatientHistory::create([
                 'nama_lengkap' => $patient->nama_lengkap,
                 'usia' => $patient->usia,
@@ -52,11 +47,9 @@ class AdminController extends Controller
                 'tanggal' => Carbon::today(),
             ]);
 
-            // Hapus pasien
             $patient->delete();
         }
 
-        // Hapus antrian
         $queue->delete();
 
         return redirect()->route('admin.dashboard')->with('success', 'Pasien telah dipanggil, masuk ke riwayat, dan dihapus dari tabel pasien.');
