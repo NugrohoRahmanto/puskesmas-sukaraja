@@ -25,3 +25,7 @@ Aplikasi web untuk manajemen Puskesmas Sukaraja mencakup modul:
 - run `` php artisan storage:link ``
 - run `` php artisan serve ``
 - then visit `` http://localhost:8000 or http://127.0.0.1:8000 ``.
+
+# dump user
+- username : admin, pw : 12345678
+- username : user1, pw : 12345678
