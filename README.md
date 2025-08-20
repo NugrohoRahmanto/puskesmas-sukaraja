@@ -1,17 +1,6 @@
 # Puskesmas Sukaraja - Web Application
 
-Aplikasi web untuk manajemen Puskesmas Sukaraja menggunakan **Laravel 12**, mencakup modul:
-
-- Manajemen Pengguna
-- Manajemen Pasien
-- Antrian Pasien
-- Informasi Terbaru
-- Saran / Feedback
-- Riwayat Pasien
-- Dashboard Admin dan User
-- Upload dan tampilkan cover informasi
-
----
+Aplikasi web untuk manajemen Puskesmas Sukaraja mencakup modul:
 
 ## Requirement
 
