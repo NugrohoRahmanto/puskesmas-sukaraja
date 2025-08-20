@@ -25,7 +25,7 @@ Aplikasi web untuk manajemen Puskesmas Sukaraja menggunakan **Laravel 12**, menc
 ---
 
 # Local Installation
-- run `` git clone https://github.com/anandito38/fe_abp_4.git ``
+- run `` git clone https://github.com/NugrohoRahmanto/puskesmas-sukaraja.git ``
 - run `` composer install `` 
 - run `` npm install ``
 - run `` npm run dev ``
