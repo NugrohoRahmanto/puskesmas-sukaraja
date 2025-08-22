@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreign('id_pasien')->references('id_pasien')->on('patients')->onDelete('cascade');
             $table->string('no_antrian');
             $table->timestamps();
-            $table->date('tanggal')->default(now()->toDateString());
+            $table->date('tanggal');
         });
     }
 

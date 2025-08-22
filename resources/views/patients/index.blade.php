@@ -1,7 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+<a href="{{ route('patients.createWithQueue') }}" class="bg-green-500 text-white py-2 px-4 rounded mt-4 inline-block">Tambah Pasien</a>
     <div class="p-4">
+
         <h1 class="text-2xl font-bold mb-4">Daftar Pasien</h1>
 
         @if (isset($patients) && $patients->isEmpty())
@@ -25,6 +27,6 @@
             <p class="text-gray-500">Tidak ada data pasien.</p>
         @endif
 
-        <a href="{{ route('patients.createWithQueue') }}" class="bg-green-500 text-white py-2 px-4 rounded mt-4 inline-block">Tambah Pasien</a>
+        
     </div>
 @endsection
