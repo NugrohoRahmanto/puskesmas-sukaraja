@@ -1,17 +1,6 @@
 # Puskesmas Sukaraja - Web Application
 
-Aplikasi web untuk manajemen Puskesmas Sukaraja menggunakan **Laravel 12**, mencakup modul:
-
-- Manajemen Pengguna
-- Manajemen Pasien
-- Antrian Pasien
-- Informasi Terbaru
-- Saran / Feedback
-- Riwayat Pasien
-- Dashboard Admin dan User
-- Upload dan tampilkan cover informasi
-
----
+Aplikasi web untuk manajemen Puskesmas Sukaraja mencakup modul:
 
 ## Requirement
 
@@ -25,7 +14,7 @@ Aplikasi web untuk manajemen Puskesmas Sukaraja menggunakan **Laravel 12**, menc
 ---
 
 # Local Installation
-- run `` git clone https://github.com/anandito38/fe_abp_4.git ``
+- run `` git clone https://github.com/NugrohoRahmanto/puskesmas-sukaraja.git ``
 - run `` composer install `` 
 - run `` npm install ``
 - run `` npm run dev ``
@@ -36,3 +25,7 @@ Aplikasi web untuk manajemen Puskesmas Sukaraja menggunakan **Laravel 12**, menc
 - run `` php artisan storage:link ``
 - run `` php artisan serve ``
 - then visit `` http://localhost:8000 or http://127.0.0.1:8000 ``.
+
+# dump user
+- username : admin, pw : 12345678
+- username : user1, pw : 12345678
