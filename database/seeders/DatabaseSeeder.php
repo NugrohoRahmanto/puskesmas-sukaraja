@@ -15,27 +15,26 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // Menambahkan admin
         User::create([
-            'username' => 'admin',
-            'password' => bcrypt('12345678'),
-            'role' => 'admin',
-            'no_tel' => '081234567890',
-            'jenis_kelamin' => 'L',
+            'username'     => 'admin',
+            'email'        => 'admin@example.com',
+            'password'     => bcrypt('12345678'),
+            'role'         => 'admin',
+            'no_tel'       => '081234567890',
             'nama_lengkap' => 'Admin Puskesmas',
+            'status'       => 'active',
         ]);
 
-        // Menambahkan user biasa
         User::create([
-            'username' => 'user1',
-            'password' => bcrypt('12345678'),
-            'role' => 'user',
-            'no_tel' => '081234567891',
-            'jenis_kelamin' => 'P',
+            'username'     => 'user1',
+            'email'        => 'user1@example.com',
+            'password'     => bcrypt('12345678'),
+            'role'         => 'user',
+            'no_tel'       => '081234567891',
             'nama_lengkap' => 'User Satu',
+            'status'       => 'active',
         ]);
 
-        // Menambahkan informasi
         Information::create([
             'jenis' => 'Berita',
             'judul' => 'Puskesmas Sukaraja Membuka Layanan Baru',
