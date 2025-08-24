@@ -18,7 +18,7 @@ use App\Http\Controllers\PatientHistoryController;
 | Routes that can be accessed without authentication
 */
 
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard'); // landing + dashboard
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard'); 
 Route::get('/queues', [QueueController::class, 'index'])->name('queues.index');
 Route::get('/queues/{queue}', [QueueController::class, 'show'])->name('queues.show');
 
