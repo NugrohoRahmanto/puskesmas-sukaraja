@@ -4,12 +4,74 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
+    }
+    
+    public function me()
+    {
+        $user = Auth::user();
+        return view('users.profile', compact('user'));
+    }
+
+    public function editMe()
+    {
+        $user = Auth::user();
+        return view('users.edit', compact('user'));
+    }
+
+    public function updateMe(Request $request)
+    {
+        $user = Auth::user();
+
+        $validated = $request->validate([
+            'username'     => [
+                'required','string','max:50','alpha_dash',
+                Rule::unique('users','username')->ignore($user->id_pengguna, 'id_pengguna')
+            ],
+            'email'        => [
+                'required','email','max:255',
+                Rule::unique('users','email')->ignore($user->id_pengguna, 'id_pengguna')
+            ],
+            'nama_lengkap' => 'required|string|max:255',
+            'no_tel'       => 'nullable|string|max:15',
+        ]);
+
+        $user->update([
+            'username'     => $validated['username'],
+            'email'        => $validated['email'],
+            'nama_lengkap' => $validated['nama_lengkap'],
+            'no_tel'       => $validated['no_tel'] ?? null,
+        ]);
+
+        return redirect()->route('user.me')->with('success', 'Profil berhasil diperbarui.');
+    }
+
+    public function editPassword()
+    {
+        return view('users.changePassword');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $user = Auth::user();
+
+        $request->validate([
+            'current_password' => ['required','current_password'],
+            'new_password'     => ['required','string','min:8','different:current_password','confirmed'],
+        ]);
+
+        $user->forceFill([
+            'password' => Hash::make($request->new_password),
+        ])->save();
+
+        return redirect()->route('user.me')->with('success', 'Password berhasil diperbarui.');
     }
     
     public function indexAdmin()

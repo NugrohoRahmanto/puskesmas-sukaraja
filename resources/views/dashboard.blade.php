@@ -7,6 +7,7 @@
     @if (Auth::check())  
         <a href="{{ route('patients.index') }}" class="bg-blue-500 text-white py-2 px-4 rounded mb-4 inline-block">Lihat Daftar Pasien</a>
         <a href="{{ route('suggestions.create') }}" class="bg-blue-500 text-white py-2 px-4 rounded mb-4 inline-block">Beri Saran/Masukan</a>
+        <a href="{{ route('user.me') }}" class="bg-blue-500 text-white py-2 px-4 rounded mb-4 inline-block">lihat akun</a>
     @else
         <p class="mb-4">Silakan login untuk melihat daftar pasien Anda.</p>
     @endif
