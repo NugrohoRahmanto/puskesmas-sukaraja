@@ -25,8 +25,8 @@
                     <li class="mb-6 border-b pb-4">
                         <div class="flex flex-col md:flex-row gap-4">
                             @if($info->cover)
-                                <img src="{{ asset('storage/covers/' . $info->cover) }}" 
-                                     alt="{{ $info->judul }}" 
+                                <img src="{{ asset('storage/covers/' . $info->cover) }}"
+                                     alt="{{ $info->judul }}"
                                      class="w-32 h-32 object-cover rounded">
                             @endif
                             <div class="flex-1">
@@ -44,4 +44,3 @@
     </div>
 </div>
 @endsection
-    
