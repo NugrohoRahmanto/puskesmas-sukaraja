@@ -21,6 +21,7 @@ class Queue extends Model
         'no_antrian',
         'created_at',
         'updated_at',
+        'tanggal',
     ];
 
     public function patient()

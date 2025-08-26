@@ -108,12 +108,12 @@ class PatientController extends Controller
             'no_tel' => $request->no_tel,
         ]);
 
-        $dt = Carbon::now('Asia/Jakarta');
-        $today = $dt->toDateString();
+        $today = Carbon::now()->toDateString();
 
         $lastQueue = Queue::whereDate('tanggal', $today)->latest()->first();
         $noAntrian = $lastQueue ? $lastQueue->no_antrian + 1 : 1;
 
+        // dd($today, $noAntrian, $lastQueue);
         Queue::create([
             'id_pasien' => $patient->id_pasien,
             'no_antrian' => $noAntrian,

@@ -4,17 +4,16 @@
 <div class="p-4">
     <h1 class="text-2xl font-bold mb-4">Dashboard</h1>
 
-    @if (Auth::check())  <!-- Pastikan hanya yang login yang bisa melihat tombol ini -->
+    @if (Auth::check())  
         <a href="{{ route('patients.index') }}" class="bg-blue-500 text-white py-2 px-4 rounded mb-4 inline-block">Lihat Daftar Pasien</a>
         <a href="{{ route('suggestions.create') }}" class="bg-blue-500 text-white py-2 px-4 rounded mb-4 inline-block">Beri Saran/Masukan</a>
+        <a href="{{ route('user.me') }}" class="bg-blue-500 text-white py-2 px-4 rounded mb-4 inline-block">lihat akun</a>
     @else
         <p class="mb-4">Silakan login untuk melihat daftar pasien Anda.</p>
     @endif
 
-    <!-- Tombol untuk melihat antrian, tampil untuk semua user -->
-    <a href="{{ route('suggestions.create') }}" class="bg-blue-500 text-white py-2 px-4 rounded mb-4 inline-block">Lihat Antrian</a>
+    <a href="{{ route('queues.index') }}" class="bg-blue-500 text-white py-2 px-4 rounded mb-4 inline-block">Lihat Antrian</a>
 
-    <!-- Informasi Terbaru -->
     <div class="mt-4">
         <h2 class="text-xl font-semibold mb-2">Informasi Terbaru</h2>
         @if($latestInfo->isEmpty())
@@ -33,8 +32,6 @@
                                 <h3 class="font-semibold text-lg">{{ $info->judul }}</h3>
                                 <p class="text-sm text-gray-500">{{ $info->created_at->format('d F Y') }}</p>
                                 <p class="mt-1">{{ Str::limit($info->isi, 150) }}</p>
-                                {{-- Jika mau tambahkan link "Baca Selengkapnya" --}}
-                                {{-- <a href="{{ route('informations.show', $info->id_informasi) }}" class="text-blue-500 mt-2 inline-block">Baca Selengkapnya</a> --}}
                             </div>
                         </div>
                     </li>

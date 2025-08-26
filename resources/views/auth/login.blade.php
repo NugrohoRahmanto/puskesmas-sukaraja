@@ -4,7 +4,6 @@
     <div class="max-w-sm mx-auto bg-white p-6 rounded shadow-md">
         <h2 class="text-2xl font-bold mb-4">Login</h2>
         
-        <!-- Menampilkan pesan error jika ada validasi yang gagal -->
         @if ($errors->any())
             <div class="mb-4 text-red-500">
                 <ul>
@@ -15,7 +14,6 @@
             </div>
         @endif
 
-        <!-- Form Login -->
         <form action="{{ route('login') }}" method="POST">
             @csrf
             <div class="mb-4">
@@ -32,7 +30,14 @@
         </form>
 
         <div class="mt-4 text-center">
-            <p class="text-sm">Belum punya akun? <a href="{{ route('register') }}" class="text-blue-500 hover:underline">Daftar Sekarang</a></p>
+            <a href="{{ route('password.request') }}" class="text-sm text-blue-500 hover:underline">Lupa Password?</a>
+        </div>
+
+        <div class="mt-2 text-center">
+            <p class="text-sm">
+                Belum punya akun?
+                <a href="{{ route('register') }}" class="text-blue-500 hover:underline">Daftar Sekarang</a>
+            </p>
         </div>
     </div>
 @endsection

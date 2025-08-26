@@ -18,7 +18,7 @@ use App\Http\Controllers\PatientHistoryController;
 | Routes that can be accessed without authentication
 */
 
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard'); // landing + dashboard
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard'); 
 Route::get('/queues', [QueueController::class, 'index'])->name('queues.index');
 Route::get('/queues/{queue}', [QueueController::class, 'show'])->name('queues.show');
 
@@ -35,6 +35,11 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 
+Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('password.request');
+Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->middleware('throttle:5,1')->name('password.email');
+
+Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 /*
 |--------------------------------------------------------------------------
 | Authenticated User Routes
@@ -42,19 +47,22 @@ Route::post('/register', [AuthController::class, 'register']);
 */
 
 Route::middleware('auth')->group(function () {
-    // My Patients
-    Route::get('/my-patients', [PatientController::class, 'index'])->name('patients.index');
+    // Account
+    Route::get('/me',          [UserController::class, 'me'])->name('user.me');
+    Route::get('/me/edit',     [UserController::class, 'editMe'])->name('user.me.edit');
+    Route::put('/me',          [UserController::class, 'updateMe'])->name('user.me.update');
+    Route::get('/me/password', [UserController::class, 'editPassword'])->name('user.me.password.edit');
+    Route::put('/me/password', [UserController::class, 'updatePassword'])->name('user.me.password.update');
 
-    // Create patient with queue
+    // Patients
+    Route::get('/my-patients', [PatientController::class, 'index'])->name('patients.index');
     Route::get('/patients/create-with-queue', [PatientController::class, 'createWithQueue'])->name('patients.createWithQueue');
     Route::post('/patients', [PatientController::class, 'storeWithQueue'])->name('patients.storeWithQueue');
-
-    // Edit, update, delete patients (UUID)
     Route::get('/patients/{id_pasien}/edit', [PatientController::class, 'edit'])->name('patients.edit');
     Route::put('/patients/{id_pasien}', [PatientController::class, 'update'])->name('patients.update');
     Route::delete('/patients/{id_pasien}', [PatientController::class, 'destroy'])->name('patients.destroy');
 
-    // suggestions
+    // Suggestions
     Route::get('/suggestions/create', [SuggestionController::class, 'create'])->name('suggestions.create'); // form tambah saran
     Route::post('/suggestions', [SuggestionController::class, 'store'])->name('suggestions.store'); // simpan saran
 });
@@ -67,9 +75,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'indexAdmin'])->name('admin.dashboard');
-
     Route::post('/queues/{id_antrian}', [AdminController::class, 'callAdmin'])->name('admin.call');
-
 
     // Users management
     Route::get('/users', [UserController::class, 'indexAdmin'])->name('admin.users.indexAdmin');
@@ -77,7 +83,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::put('/users/{id_pengguna}', [UserController::class, 'updateAdmin'])->name('admin.users.updateAdmin');
     Route::delete('/users/{id_pengguna}', [UserController::class, 'destroyAdmin'])->name('admin.users.destroyAdmin');
 
-    // Patients management (admin)
+    // Patients management 
     Route::get('/patients', [PatientController::class, 'indexAdmin'])->name('admin.patients.indexAdmin');
     Route::get('/patients/{id_pasien}/edit', [PatientController::class, 'editAdmin'])->name('admin.patients.editAdmin');
     Route::put('/patients/{id_pasien}', [PatientController::class, 'updateAdmin'])->name('admin.patients.updateAdmin');
@@ -90,7 +96,6 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/informations/{id_informasi}/edit', [InformationController::class, 'editAdmin'])->name('admin.informations.editAdmin');
     Route::put('/informations/{id_informasi}', [InformationController::class, 'updateAdmin'])->name('admin.informations.updateAdmin');
     Route::delete('/informations/{id_informasi}', [InformationController::class, 'destroyAdmin'])->name('admin.informations.destroyAdmin');
-
 
     // Suggestions management
     Route::get('/suggestions', [SuggestionController::class, 'indexAdmin'])->name('admin.suggestions.indexAdmin');
