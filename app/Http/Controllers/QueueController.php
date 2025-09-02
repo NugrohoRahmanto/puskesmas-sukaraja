@@ -12,13 +12,13 @@ class QueueController extends Controller
 {
     public function index()
     {
-        $queues = Queue::all(); 
+        $queues = Queue::all();
         return view('queues.index', compact('queues'));
     }
 
     public function create()
     {
-        $patients = Auth::user()->patients; 
+        $patients = Auth::user()->patients;
         return view('queues.create', compact('patients'));
     }
 
@@ -140,6 +140,7 @@ class QueueController extends Controller
                 'jenis_kelamin' => $patient->jenis_kelamin,
                 'no_tel' => $patient->no_tel,
                 'tanggal' => Carbon::today(),
+                'no_antrian' => $queue->no_antrian,
             ]);
 
             $patient->delete();

@@ -15,7 +15,7 @@ class PatientController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function index()
     {
         $patients = Auth::user()->patients;
@@ -52,8 +52,8 @@ class PatientController extends Controller
 
     public function edit($id_pasien)
     {
-        $patient = Patient::findOrFail($id_pasien);  
-        return view('patients.edit', compact('patient'));  
+        $patient = Patient::findOrFail($id_pasien);
+        return view('patients.edit', compact('patient'));
     }
 
     public function update(Request $request, $id_pasien)
@@ -110,13 +110,15 @@ class PatientController extends Controller
 
         $today = Carbon::now()->toDateString();
 
-        $lastQueue = Queue::whereDate('tanggal', $today)->latest()->first();
-        $noAntrian = $lastQueue ? $lastQueue->no_antrian + 1 : 1;
 
+        $maxQueue = Queue::whereDate('tanggal', $today)->max('no_antrian');
+        $maxHist  = PatientHistory::whereDate('tanggal', $today)->max('no_antrian');
+        $lastNumber = max($maxQueue ?? 0, $maxHist ?? 0);
+        $nextNumber = $lastNumber + 1;
         // dd($today, $noAntrian, $lastQueue);
         Queue::create([
             'id_pasien' => $patient->id_pasien,
-            'no_antrian' => $noAntrian,
+            'no_antrian' => $nextNumber,
             'tanggal' => $today,
         ]);
 

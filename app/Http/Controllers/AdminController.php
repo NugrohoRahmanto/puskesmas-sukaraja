@@ -13,7 +13,7 @@ class AdminController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function indexAdmin()
     {
         if (Auth::check() && Auth::user()->role != 'admin') {
@@ -36,6 +36,7 @@ class AdminController extends Controller
         }
 
         $queue = Queue::with('patient')->findOrFail($id_antrian);
+        // dd($queue->no_antrian);
         $patient = $queue->patient;
 
         if ($patient) {
@@ -45,6 +46,7 @@ class AdminController extends Controller
                 'jenis_kelamin' => $patient->jenis_kelamin,
                 'no_tel' => $patient->no_tel,
                 'tanggal' => Carbon::today(),
+                'no_antrian' => $queue->no_antrian,
             ]);
 
             $patient->delete();
