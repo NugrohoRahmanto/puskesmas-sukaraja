@@ -11,7 +11,7 @@ class PatientHistoryController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function indexAdmin()
     {
         if (Auth::check() && Auth::user()->role != 'admin') {
@@ -47,6 +47,7 @@ class PatientHistoryController extends Controller
             'jenis_kelamin' => 'required|in:L,P',
             'no_tel' => 'nullable|string|max:15',
             'tanggal' => 'required|date',
+            'no_antrian' => 'required|integer|min:1',
         ]);
 
         $history = PatientHistory::findOrFail($id_history);

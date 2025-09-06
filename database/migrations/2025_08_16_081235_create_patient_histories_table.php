@@ -12,13 +12,14 @@
         public function up()
         {
             Schema::create('history_pasien', function (Blueprint $table) {
-                $table->uuid('id_history')->primary(); 
-                $table->string('nama_lengkap');  
-                $table->integer('usia');  
-                $table->enum('jenis_kelamin', ['L', 'P']);  
-                $table->string('no_tel')->nullable();  
-                $table->date('tanggal');  
-                $table->timestamps();  
+                $table->uuid('id_history')->primary();
+                $table->string('nama_lengkap');
+                $table->integer('usia');
+                $table->enum('jenis_kelamin', ['L', 'P']);
+                $table->string('no_tel')->nullable();
+                $table->date('tanggal');
+                $table->integer('no_antrian');
+                $table->timestamps();
             });
         }
 
