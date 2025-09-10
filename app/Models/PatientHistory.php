@@ -11,9 +11,10 @@ class PatientHistory extends Model
 {
     use HasFactory;
 
+    protected $table = 'history_pasien';
+    protected $primaryKey = 'id_history';
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $primaryKey = 'id_history';
 
     protected static function booted()
     {
@@ -21,14 +22,19 @@ class PatientHistory extends Model
             $history->id_history = (string) Str::uuid();
         });
     }
-    protected $table = 'history_pasien';
+
     protected $fillable = [
-        'nama_lengkap',
-        'usia',
-        'jenis_kelamin',
-        'no_tel',
+        'id_pasien',
+        'nik',
+        'nama',
+        'pernah_berobat',
         'tanggal',
-        'no_antrian'
+        'no_antrian',
     ];
+
+    public function patient()
+    {
+        return $this->belongsTo(Patient::class, 'id_pasien');
+    }
 }
 

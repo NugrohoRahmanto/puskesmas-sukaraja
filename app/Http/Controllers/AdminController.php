@@ -41,10 +41,9 @@ class AdminController extends Controller
 
         if ($patient) {
             PatientHistory::create([
-                'nama_lengkap' => $patient->nama_lengkap,
-                'usia' => $patient->usia,
-                'jenis_kelamin' => $patient->jenis_kelamin,
-                'no_tel' => $patient->no_tel,
+                'nik' => $patient->nik,
+                'nama' => $patient->nama,
+                'pernah_berobat' => $patient->pernah_berobat,
                 'tanggal' => Carbon::today(),
                 'no_antrian' => $queue->no_antrian,
             ]);
