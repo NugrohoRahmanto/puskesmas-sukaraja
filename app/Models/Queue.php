@@ -17,8 +17,8 @@ class Queue extends Model
     protected $primaryKey = 'id_antrian';
 
     protected $fillable = [
-        'id_pasien',  
-        'no_antrian',
+        'id_pasien',
+        'no_antrian' ,
         'created_at',
         'updated_at',
         'tanggal',

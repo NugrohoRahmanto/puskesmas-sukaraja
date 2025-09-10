@@ -18,7 +18,7 @@ use App\Http\Controllers\PatientHistoryController;
 | Routes that can be accessed without authentication
 */
 
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard'); 
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/queues', [QueueController::class, 'index'])->name('queues.index');
 Route::get('/queues/{queue}', [QueueController::class, 'show'])->name('queues.show');
 
@@ -83,12 +83,13 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::put('/users/{id_pengguna}', [UserController::class, 'updateAdmin'])->name('admin.users.updateAdmin');
     Route::delete('/users/{id_pengguna}', [UserController::class, 'destroyAdmin'])->name('admin.users.destroyAdmin');
 
-    // Patients management 
+    // Patients management
     Route::get('/patients', [PatientController::class, 'indexAdmin'])->name('admin.patients.indexAdmin');
     Route::get('/patients/{id_pasien}/edit', [PatientController::class, 'editAdmin'])->name('admin.patients.editAdmin');
     Route::put('/patients/{id_pasien}', [PatientController::class, 'updateAdmin'])->name('admin.patients.updateAdmin');
     Route::delete('/patients/{id_pasien}', [PatientController::class, 'destroyAdmin'])->name('admin.patients.destroyAdmin');
-    
+    Route::get('/patients/search', [PatientController::class, 'search'])->name('patients.search');
+
     // Information management
     Route::get('/informations', [InformationController::class, 'indexAdmin'])->name('admin.informations.indexAdmin');
     Route::get('/informations/create', [InformationController::class, 'createAdmin'])->name('admin.informations.createAdmin');
@@ -108,7 +109,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/queues/{id_antrian}/edit', [QueueController::class, 'editAdmin'])->name('admin.queues.editAdmin');
     Route::put('/queues/{id_antrian}', [QueueController::class, 'updateAdmin'])->name('admin.queues.updateAdmin');
     Route::delete('/queues/{id_antrian}', [QueueController::class, 'destroyAdmin'])->name('admin.queues.destroyAdmin');
-    
+
     // Call pasien (pindah ke history)
     Route::post('/queues/{id_antrian}/call', [QueueController::class, 'callAdmin'])->name('admin.queues.callAdmin');
     Route::get('patientsHistory/index', [PatientHistoryController::class, 'indexAdmin'])->name('admin.patientsHistory.indexAdmin');

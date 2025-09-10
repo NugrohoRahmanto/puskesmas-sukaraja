@@ -12,6 +12,7 @@ class Patient extends Model
 
     public $incrementing = false;
     protected $keyType = 'string';
+    protected $primaryKey = 'id_pasien';
 
     protected static function booted()
     {
@@ -19,15 +20,14 @@ class Patient extends Model
             $patient->id_pasien = (string) Str::uuid();
         });
     }
-    protected $primaryKey = 'id_pasien';
 
     protected $fillable = [
         'id_pengguna',
-        'nama_lengkap',
-        'usia',
-        'jenis_kelamin',
-        'no_tel',
+        'nik',
+        'nama',
+        'pernah_berobat',
     ];
+
     public function user()
     {
         return $this->belongsTo(User::class, 'id_pengguna');

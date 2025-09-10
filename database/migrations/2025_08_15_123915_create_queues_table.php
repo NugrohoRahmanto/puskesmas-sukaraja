@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('id_antrian');
             $table->uuid('id_pasien');
             $table->foreign('id_pasien')->references('id_pasien')->on('patients')->onDelete('cascade');
-            $table->string('no_antrian');
+            $table->unsignedBigInteger('no_antrian');
             $table->timestamps();
             $table->date('tanggal');
         });

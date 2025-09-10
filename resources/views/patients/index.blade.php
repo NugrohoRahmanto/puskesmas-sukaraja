@@ -1,135 +1,127 @@
 @extends('layouts.user')
-@section('title', 'Status Pendaftaran')
+@section('title', 'Daftar Pasien')
 
 @section('content')
-    <div class="px-4 pt-10 pb-8 min-h-[100svh] grid place-items-center">
-        <div class="relative bg-slate-100 rounded-[22px] p-6 md:p-8 w-full max-w-5xl">
+<div class="px-4 pt-10 pb-8 min-h-[100svh] grid place-items-center">
+  <div class="relative w-full max-w-5xl bg-slate-100 rounded-[22px] p-6 md:p-8">
 
-            <div class="absolute -top-5 left-1/2 -translate-x-1/2">
-                <div
-                    class="px-6 py-2 bg-brand-700 text-white rounded-full shadow border border-slate-200
-                  text-center text-base md:text-lg font-semibold whitespace-nowrap">
-                    Status Pendaftaran
-                </div>
-            </div>
-
-            @php
-                $patient =
-                    $lastPatient ??
-                    (isset($patients) && $patients instanceof \Illuminate\Support\Collection
-                        ? $patients->sortByDesc('created_at')->first()
-                        : null);
-
-                $queue =
-                    optional($patient)->latestQueue ??
-                    (optional($patient)->queues ? $patient->queues->sortByDesc('created_at')->first() : null);
-
-                // Map label
-                $jkMap = ['L' => 'Laki - Laki', 'P' => 'Perempuan'];
-                $jk = $jkMap[strtoupper(optional($patient)->jenis_kelamin ?? '')] ?? '-';
-                $usia = optional($patient)->usia;
-                $usiaLabel = is_null($usia) ? '-' : ($usia < 18 ? 'Anak-anak' : ($usia < 60 ? 'Dewasa' : 'Lansia'));
-                $jaminan = optional($patient)->jaminan_kesehatan ?? (optional($patient)->jaminan ?? '-');
-
-                $status = strtolower(optional($queue)->status ?? (optional($patient)->status ?? 'menunggu'));
-                $statusLabelMap = [
-                    'diterima' => 'Diterima',
-                    'menunggu' => 'Menunggu',
-                    'dipanggil' => 'Dipanggil',
-                    'dilayani' => 'Dilayani',
-                    'selesai' => 'Selesai',
-                    'batal' => 'Batal',
-                ];
-                $statusClassMap = [
-                    'diterima' => 'bg-blue-600 text-white ring-2 ring-blue-300',
-                    'menunggu' => 'bg-amber-500 text-white ring-2 ring-amber-300',
-                    'dipanggil' => 'bg-sky-600 text-white ring-2 ring-sky-300',
-                    'dilayani' => 'bg-emerald-600 text-white ring-2 ring-emerald-300',
-                    'selesai' => 'bg-slate-600 text-white ring-2 ring-slate-300',
-                    'batal' => 'bg-red-600 text-white ring-2 ring-red-300',
-                ];
-                $statusLabel = $statusLabelMap[$status] ?? ucfirst($status);
-                $statusClass = $statusClassMap[$status] ?? $statusClassMap['menunggu'];
-            @endphp
-
-            @if (!$patient)
-                <div class="text-center text-slate-600 py-12">
-                    <p class="mb-4">Anda belum mendaftarkan pasien.</p>
-                    <a href="{{ route('patients.createWithQueue') }}"
-                        class="inline-flex rounded-full bg-brand-700 hover:bg-brand-600 text-white px-5 py-2.5">
-                        Tambah Pasien
-                    </a>
-                </div>
-            @else
-                <div class="flex items-center gap-2 mb-6">
-
-                    {{-- <span class="inline-flex rounded-full bg-emerald-600 text-white text-xs px-3 py-1">Status</span>
-        <span class="inline-flex rounded-full text-xs px-3 py-1 {{ $statusClass }}">{{ $statusLabel }}</span>
-        --}}
-                    <span class="ml-auto text-sm text-slate-500">
-                        No. Antrian:
-                        <span class="font-semibold text-slate-800">{{ optional($queue)->no_antrian ?? '-' }}</span>
-                    </span>
-                </div>
-
-                {{-- Detail pasien --}}
-                <div class="grid md:grid-cols-3 gap-8">
-                    <div class="space-y-6">
-                        <div>
-                            <p class="text-sm text-slate-500">NIK</p>
-                            <div class="mt-1 rounded-full bg-white border border-slate-200 px-4 py-2.5">
-                                {{ $patient->nik ?? '-' }}
-                            </div>
-                        </div>
-                        <div>
-                            <p class="text-sm text-slate-500">Nama Lengkap</p>
-                            <div class="mt-1 rounded-full bg-white border border-slate-200 px-4 py-2.5">
-                                {{ $patient->nama_lengkap ?? '-' }}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="space-y-6">
-                        <div>
-                            <p class="text-sm text-slate-500">Jenis Kelamin</p>
-                            <div class="mt-1 rounded-full bg-white border border-slate-200 px-4 py-2.5">{{ $jk }}
-                            </div>
-                        </div>
-                        <div>
-                            <p class="text-sm text-slate-500">Usia</p>
-                            <div class="mt-1 rounded-full bg-white border border-slate-200 px-4 py-2.5">{{ $usiaLabel }}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="space-y-6">
-                        <div>
-                            <p class="text-sm text-slate-500">Jaminan Kesehatan</p>
-                            <div class="mt-1 rounded-full bg-white border border-slate-200 px-4 py-2.5">{{ $jaminan }}
-                            </div>
-                        </div>
-                        <div>
-                            <p class="text-sm text-slate-500">Tanggal Lahir</p>
-                            <div class="mt-1 rounded-full bg-white border border-slate-200 px-4 py-2.5">
-                                {{ optional($patient->tanggal_lahir)->translatedFormat('d F Y') ?? '-' }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-8 flex items-center justify-end gap-3">
-                    <button type="button"
-                        class="inline-flex items-center justify-center w-10 h-10 rounded-full border border-slate-300 bg-brand-700 hover:bg-brand-600"
-                        title="Aktifkan notifikasi">
-                        <x-heroicon-o-bell class="w-5 h-5 text-white" />
-                    </button>
-                    <a href=""
-                        class="inline-flex items-center gap-2 rounded-full bg-brand-700 hover:bg-brand-600 text-white text-sm px-5 py-2.5">
-                        <x-heroicon-o-printer class="w-5 h-5" />
-                        Print
-                    </a>
-                </div>
-            @endif
-        </div>
+    {{-- Pill Header --}}
+    <div class="absolute -translate-x-1/2 -top-5 left-1/2">
+      <div class="px-6 py-2 text-base font-semibold text-center text-white border rounded-full shadow bg-brand-700 border-slate-200 md:text-lg whitespace-nowrap">
+        Daftar Pasien
+      </div>
     </div>
+
+    {{-- Flash message --}}
+    @if (session('success'))
+      <div class="px-4 py-2 mb-4 text-sm border rounded-lg border-emerald-200 bg-emerald-50 text-emerald-800">
+        {{ session('success') }}
+      </div>
+    @endif
+    @if ($errors->any())
+      <div class="px-4 py-2 mb-4 text-sm text-red-800 border border-red-200 rounded-lg bg-red-50">
+        Terjadi kesalahan. Silakan cek input Anda.
+      </div>
+    @endif
+
+    {{-- Toolbar --}}
+    <div class="flex flex-wrap items-center gap-2 mb-4">
+      <a href="{{ route('patients.createWithQueue') }}"
+         class="inline-flex items-center gap-2 px-4 py-2 text-sm text-white rounded-full bg-brand-700 hover:bg-brand-600">
+        <x-heroicon-o-plus class="w-5 h-5" />
+        Tambah Pasien
+      </a>
+
+      {{-- (Opsional) Pencarian cepat --}}
+      <form method="GET" action="{{ route('patients.search') }}" class="ml-auto">
+        <div class="relative">
+            <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari NIK / Nama"
+                class="w-64 rounded-full bg-white border border-slate-200 px-4 py-2.5 pr-10
+                        focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-brand-400
+                        placeholder:text-slate-400 text-sm" />
+
+            <button type="submit"
+                    class="absolute -translate-y-1/2 right-3 top-1/2 text-slate-400 hover:text-brand-700">
+                <x-heroicon-o-magnifying-glass class="w-5 h-5"/>
+            </button>
+        </div>
+    </form>
+    </div>
+
+    {{-- Tabel --}}
+    <div class="overflow-x-auto bg-white border rounded-2xl border-slate-200">
+      <table class="min-w-full text-sm">
+        <thead class="border-b bg-slate-50 border-slate-200 text-slate-700">
+          <tr>
+            <th class="px-4 py-3 font-medium text-left">#</th>
+            <th class="px-4 py-3 font-medium text-left">NIK</th>
+            <th class="px-4 py-3 font-medium text-left">Nama</th>
+            <th class="px-4 py-3 font-medium text-left">Pernah Berobat</th>
+            <th class="px-4 py-3 font-medium text-left">Dibuat</th>
+            <th class="px-4 py-3 font-medium text-left">Aksi</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-200">
+          @forelse ($patients as $i => $p)
+            <tr class="bg-white hover:bg-slate-50">
+              <td class="px-4 py-3">{{ ($patients instanceof \Illuminate\Pagination\AbstractPaginator)
+                                        ? $patients->firstItem() + $i : $i + 1 }}</td>
+              <td class="px-4 py-3 font-medium text-slate-800">{{ $p->nik }}</td>
+              <td class="px-4 py-3">{{ $p->nama }}</td>
+              <td class="px-4 py-3">
+                @if($p->pernah_berobat === 'Ya')
+                  <span class="inline-flex items-center rounded-full bg-emerald-600 text-white text-xs px-2.5 py-1">
+                    Ya
+                  </span>
+                @else
+                  <span class="inline-flex items-center rounded-full bg-slate-600 text-white text-xs px-2.5 py-1">
+                    Tidak
+                  </span>
+                @endif
+              </td>
+              <td class="px-4 py-3 text-slate-500">
+                {{ optional($p->created_at)->translatedFormat('d M Y, H:i') }}
+              </td>
+              <td class="px-4 py-3">
+                <div class="flex items-center gap-2">
+                  <a href="{{ route('patients.edit', $p->id_pasien) }}"
+                     class="inline-flex items-center gap-1 rounded-full border border-slate-300 text-slate-700
+                            hover:bg-brand-700 hover:text-white px-3 py-1.5">
+                    <x-heroicon-o-pencil-square class="w-5 h-5" />
+                    Edit
+                  </a>
+
+                  <form action="{{ route('patients.destroy', $p->id_pasien) }}" method="POST"
+                        onsubmit="return confirm('Hapus pasien ini? Tindakan tidak dapat dibatalkan.');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit"
+                            class="inline-flex items-center gap-1 rounded-full bg-red-600 hover:bg-red-500 text-white px-3 py-1.5">
+                      <x-heroicon-o-trash class="w-5 h-5" />
+                      Hapus
+                    </button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          @empty
+            <tr>
+              <td colspan="6" class="px-4 py-8 text-center text-slate-500">
+                Belum ada data pasien.
+              </td>
+            </tr>
+          @endforelse
+        </tbody>
+      </table>
+    </div>
+
+    {{-- Pagination (jika pakai paginate di controller) --}}
+    @if ($patients instanceof \Illuminate\Pagination\AbstractPaginator)
+      <div class="mt-4">
+        {{ $patients->links() }}
+      </div>
+    @endif
+
+  </div>
+</div>
 @endsection
