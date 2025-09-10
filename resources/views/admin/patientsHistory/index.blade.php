@@ -15,6 +15,9 @@
                 <th class="px-2 py-1 border">NIK</th>
                 <th class="px-2 py-1 border">Nama</th>
                 <th class="px-2 py-1 border">Pernah Berobat</th>
+                <th class="px-2 py-1 border">No Antrian</th>
+                <th class="px-2 py-1 border">Tanggal</th>
+
                 <th class="px-2 py-1 border">Aksi</th>
             </tr>
         </thead>
@@ -25,6 +28,8 @@
                 <td class="px-2 py-1 border">{{ $history->nik }}</td>
                 <td class="px-2 py-1 border">{{ $history->nama }}</td>
                 <td class="px-2 py-1 border">{{ $history->pernah_berobat }}</td>
+                <td class="px-2 py-1 border">{{ $history->no_antrian }}</td>
+                <td class="px-2 py-1 border">{{ $history->tanggal }}</td>
                 <td class="flex gap-2 px-2 py-1 border">
                     <a href="{{ route('admin.patientsHistory.editAdmin', $history->id_history) }}" class="px-2 py-1 bg-yellow-400 rounded">Edit</a>
                     <form action="{{ route('admin.patientsHistory.destroyAdmin', $history->id_history) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus?');">

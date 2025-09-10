@@ -53,7 +53,7 @@
       <table class="min-w-full text-sm">
         <thead class="border-b bg-slate-50 border-slate-200 text-slate-700">
           <tr>
-            <th class="px-4 py-3 font-medium text-left">#</th>
+            <th class="px-4 py-3 font-medium text-left">No Antrian</th>
             <th class="px-4 py-3 font-medium text-left">NIK</th>
             <th class="px-4 py-3 font-medium text-left">Nama</th>
             <th class="px-4 py-3 font-medium text-left">Pernah Berobat</th>
@@ -64,8 +64,7 @@
         <tbody class="divide-y divide-slate-200">
           @forelse ($patients as $i => $p)
             <tr class="bg-white hover:bg-slate-50">
-              <td class="px-4 py-3">{{ ($patients instanceof \Illuminate\Pagination\AbstractPaginator)
-                                        ? $patients->firstItem() + $i : $i + 1 }}</td>
+              <td class="px-4 py-3">{{ $p->id_antrian }}</td>
               <td class="px-4 py-3 font-medium text-slate-800">{{ $p->nik }}</td>
               <td class="px-4 py-3">{{ $p->nama }}</td>
               <td class="px-4 py-3">

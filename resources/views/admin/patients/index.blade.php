@@ -13,7 +13,7 @@
     <table class="w-full border border-collapse border-gray-300 table-auto">
         <thead>
             <tr>
-                <th class="px-4 py-2 border">NIK/th>
+                <th class="px-4 py-2 border">NIK</th>
                 <th class="px-4 py-2 border">Nama</th>
                 <th class="px-4 py-2 border">Pernah Berobat</th>
                 <th class="px-4 py-2 border">Aksi</th>

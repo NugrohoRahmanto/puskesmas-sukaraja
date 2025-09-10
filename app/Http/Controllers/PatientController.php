@@ -37,14 +37,23 @@ class PatientController extends Controller
 
     public function search(Request $request)
     {
-        $q = $request->q;
-        $patients = Auth::user()
-            ->patients()
-            ->when($q, fn($w) => $w->where('nik', 'like', "%$q%")
-                                ->orWhere('nama', 'like', "%$q%"))
-            ->latest()
-            ->paginate(10)
-            ->withQueryString();
+        $today = now()->toDateString();
+        $q = trim($request->q ?? '');
+
+        $patients = Auth::user()->patients()
+            ->leftJoin('queues as q', function ($j) use ($today) {
+                $j->on('q.id_pasien', '=', 'patients.id_pasien')
+                ->whereDate('q.tanggal', $today);
+            })
+            ->when($q !== '', function ($w) use ($q) {
+                $w->where(function ($qq) use ($q) {
+                    $qq->where('patients.nik', 'like', "%{$q}%")
+                    ->orWhere('patients.nama', 'like', "%{$q}%");
+                });
+            })
+            ->select('patients.*', 'q.id_antrian as id_antrian', 'q.no_antrian')
+            ->orderBy('patients.created_at', 'asc')
+            ->get();
 
         return view('patients.index', compact('patients'));
     }
@@ -106,7 +115,6 @@ class PatientController extends Controller
 
     public function storeWithQueue(Request $request)
     {
-        // Validasi sesuai skema baru
         $validated = $request->validate([
             'nik'             => ['required','string','size:16','regex:/^[0-9]+$/','unique:patients,nik'],
             'nama'            => ['required','string','max:255'],
@@ -120,21 +128,18 @@ class PatientController extends Controller
         $today = Carbon::today()->toDateString();
 
         return DB::transaction(function () use ($validated, $today) {
-            // 1) Buat pasien
             $patient = Patient::create([
                 'id_pengguna'    => Auth::id(),
                 'nik'            => $validated['nik'],
                 'nama'           => $validated['nama'],
-                'pernah_berobat' => $validated['pernah_berobat'], // 'Ya' / 'Tidak'
+                'pernah_berobat' => $validated['pernah_berobat'],
             ]);
 
-            // 2) Hitung nomor antrian berikutnya (gabungan Queue + History di tanggal yang sama)
             $maxQueue = Queue::whereDate('tanggal', $today)->max('no_antrian');
             $maxHist  = PatientHistory::whereDate('tanggal', $today)->max('no_antrian');
             $lastNumber = max($maxQueue ?? 0, $maxHist ?? 0);
             $nextNumber = $lastNumber + 1;
 
-            // 3) Buat antrian
             Queue::create([
                 'id_pasien'  => $patient->id_pasien,
                 'no_antrian' => $nextNumber,
@@ -153,7 +158,7 @@ class PatientController extends Controller
             return redirect()->route('dashboard')->withErrors('You are not authorized to access this page');
         }
 
-        $patients = Patient::all();
+        $patients = Patient::orderBy('nik', 'asc')->get();
         return view('admin.patients.index', compact('patients'));
     }
 
@@ -173,17 +178,26 @@ class PatientController extends Controller
             return redirect()->route('dashboard')->withErrors('You are not authorized to access this page');
         }
 
+        $patient = Patient::findOrFail($id_pasien);
+
         $validated = $request->validate([
-            'nama_lengkap' => 'required|string|max:255',
-            'usia' => 'required|integer|min:0|max:150',
-            'jenis_kelamin' => 'required|in:L,P',
-            'no_tel' => 'nullable|string|max:15',
+            'nik' => [
+                'required',
+                'string',
+                'regex:/^\d{16}$/',
+                Rule::unique('patients', 'nik')->ignore($patient->id_pasien, 'id_pasien'),
+            ],
+            'nama' => ['required', 'string', 'max:255'],
+            'pernah_berobat' => ['required', 'in:Ya,Tidak'],
+        ], [
+            'nik.regex' => 'NIK harus 16 digit angka.',
+            'nik.unique' => 'NIK sudah terdaftar.',
         ]);
 
-        $patient = Patient::findOrFail($id_pasien);
-        $patient->update($request->only(['nama_lengkap', 'usia', 'jenis_kelamin', 'no_tel']));
-
-        return redirect()->route('admin.patients.indexAdmin')->with('success', 'Patient updated successfully');
+        $patient->update($validated);
+        return redirect()
+        ->route('admin.patients.indexAdmin')
+        ->with('success', 'Data pasien berhasil diperbarui.');
     }
 
     public function destroyAdmin($id_pasien)
