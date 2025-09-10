@@ -4,15 +4,12 @@
 @section('content')
     <div class="p-4">
         @if (Auth::check())
-            {{-- INFORMASI / NEWS & ARTICLES --}}
             <section aria-labelledby="news-title" class="max-w-6xl mx-auto">
-                {{-- Heading + garis --}}
                 <h2 class="text-xl md:text-2xl font-semibold text-center">
                     Informasi Terbaru Puskesmas Sukaraja
                 </h2>
                 <div class="mx-auto mt-3 h-[2px] w-1/2 bg-brand-700"></div>
 
-                {{-- Grid 2 kolom, 5 item maks --}}
                 <div class="mt-8 grid md:grid-cols-2 gap-x-6 gap-y-6">
                     @forelse ($latestInfo as $info)
                         @php
@@ -57,7 +54,6 @@
                 </div>
             </section>
 
-            {{-- PANEL 2: Urutan Antrian --}}
             <section role="region" aria-labelledby="urutan-antrian" class="relative mt-16">
                 <div class="bg-slate-100 rounded-[22px] overflow-hidden">
                     {{-- header sticky --}}
@@ -110,7 +106,6 @@
                 </div>
             </section>
 
-            {{-- CTA opsional --}}
             <div class="mt-8 flex flex-wrap gap-2">
                 @if (Auth::check())
                     <a href="{{ route('patients.index') }}"
@@ -130,10 +125,8 @@
                 @endif
             </div>
         @else
-            {{-- WRAPPER 2 KOLOM --}}
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
 
-                {{-- PANEL INFORMASI (seperti gambar) --}}
                 <section aria-labelledby="panel-informasi">
                     <div class="relative bg-white rounded-[22px] overflow-visible pb-4">
                         <div class="bg-brand-700 backdrop-blur px-4 py-3 border-b border-slate-200">
@@ -183,7 +176,7 @@
                                 <p class="text-slate-500 text-sm md:col-span-2">Tidak ada informasi terbaru.</p>
                             @endforelse
                         </div>
-                        {{-- PILL: diposisikan relatif ke card di atas --}}
+
                         <div class="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 w-full
                             px-5 py-1.5 bg-brand-700 border border-slate-200 rounded-full
                             text-xs sm:text-sm tracking-wide text-white shadow-sm text-center z-10 mx-2">
@@ -192,7 +185,6 @@
                     </div>
                 </section>
 
-                {{-- PANEL 2: Urutan Antrian --}}
                 <section role="region" aria-labelledby="urutan-antrian" class="relative h-full">
                     <div class="bg-slate-100 overflow-hidden">
                         {{-- header sticky --}}

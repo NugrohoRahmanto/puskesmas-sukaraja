@@ -23,8 +23,6 @@
                     </a>
                     <a href="{{ route('dashboard') }}"
                         class="hidden sm:inline-flex text-sm px-3 py-2 rounded-lg text-slate-600 hover:text-brand-700 hover:bg-brand-100">Beranda</a>
-                    <a href="{{ route('dashboard') }}"
-                        class="hidden sm:inline-flex text-sm px-3 py-2 rounded-lg text-slate-600 hover:text-brand-700 hover:bg-brand-100">Tentang</a>
                 </div>
                 <div class="flex items-center gap-3">
                     <a href="{{ route('login') }}"

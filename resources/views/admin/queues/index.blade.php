@@ -1,4 +1,4 @@
-@extends('layouts.appadmin')
+@extends('layouts.admin')
 
 @section('content')
 <div class="p-4">
@@ -29,7 +29,7 @@
                     <td class="border px-2 py-1">{{ $queue->patient->jenis_kelamin }}</td>
                     <td class="border px-2 py-1 space-x-2">
                         <a href="{{ route('admin.queues.editAdmin', $queue->id_antrian) }}" class="bg-yellow-500 text-white px-2 py-1 rounded">Edit</a>
-                        
+
                         <form action="{{ route('admin.queues.destroyAdmin', $queue->id_antrian) }}" method="POST" class="inline">
                             @csrf
                             @method('DELETE')

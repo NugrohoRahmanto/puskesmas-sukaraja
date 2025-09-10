@@ -1,4 +1,4 @@
-@extends('layouts.appadmin')
+@extends('layouts.admin')
 
 @section('title', 'Daftar Informasi')
 
@@ -36,7 +36,7 @@
                 <td class="border px-4 py-2">{{ Str::limit($info->isi, 50) }}</td>
                 <td class="border px-4 py-2">{{ $info->cover ?? '-' }}</td>
                 <td class="border px-4 py-2">
-                    
+
                     <a href="{{ route('admin.informations.editAdmin', $info->id_informasi) }}" class="btn btn-warning">Edit</a>
 
                     <form action="{{ route('admin.informations.destroyAdmin', $info->id_informasi) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus informasi ini?');">

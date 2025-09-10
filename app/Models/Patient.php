@@ -10,19 +10,19 @@ class Patient extends Model
 {
     use HasFactory;
 
-    public $incrementing = false; 
-    protected $keyType = 'string'; 
+    public $incrementing = false;
+    protected $keyType = 'string';
 
     protected static function booted()
     {
         static::creating(function ($patient) {
-            $patient->id_pasien = (string) Str::uuid(); 
+            $patient->id_pasien = (string) Str::uuid();
         });
     }
-    protected $primaryKey = 'id_pasien';  
+    protected $primaryKey = 'id_pasien';
 
     protected $fillable = [
-        'id_pengguna',  
+        'id_pengguna',
         'nama_lengkap',
         'usia',
         'jenis_kelamin',
@@ -35,7 +35,7 @@ class Patient extends Model
 
     public function queues()
     {
-        return $this->hasMany(Queue::class, ' id_pasien');
+        return $this->hasMany(Queue::class, 'id_pasien');
     }
 }
 
