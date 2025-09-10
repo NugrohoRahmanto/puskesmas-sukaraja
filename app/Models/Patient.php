@@ -35,7 +35,7 @@ class Patient extends Model
 
     public function queues()
     {
-        return $this->hasMany(Queue::class, ' id_pasien');
+        return $this->hasMany(Queue::class, 'id_pasien');
     }
 }
 

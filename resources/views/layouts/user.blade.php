@@ -31,8 +31,8 @@
             </a>
 
             {{-- Pendaftaran Pasien --}}
-            <a href="{{ route('patients.index') }}"
-                class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ $active('patients.index') }}"
+            <a href="{{ route('patients.createWithQueue') }}"
+                class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ $active('patients.createWithQueue') }}"
                 aria-current="{{ request()->routeIs('patients.index') ? 'page' : 'false' }}">
                 <x-heroicon-s-user-plus class="w-5 h-5 shrink-0" aria-hidden="true"/>
                 Pendaftaran Pasien
@@ -72,7 +72,6 @@
     {{-- Main --}}
     <div class="lg:pl-64">
         <main class="px-4 md:px-6 py-6">
-            @includeWhen(session('success') || session('error'), 'partials.flash')
             @yield('content')
         </main>
     </div>
