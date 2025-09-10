@@ -20,8 +20,14 @@ class PatientController extends Controller
 
     public function index()
     {
-        $patients = Auth::user()
-            ->patients()
+        $today = now()->toDateString();
+
+        $patients = Auth::user()->patients()
+            ->leftJoin('queues as q', function ($j) use ($today) {
+                $j->on('q.id_pasien', '=', 'patients.id_pasien')
+                ->whereDate('q.tanggal', $today);
+            })
+            ->select('patients.*', 'q.id_antrian as id_antrian', 'q.no_antrian')
             ->orderBy('created_at', 'asc')
             ->get();
 

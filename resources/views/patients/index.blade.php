@@ -82,27 +82,41 @@
               <td class="px-4 py-3 text-slate-500">
                 {{ optional($p->created_at)->translatedFormat('d M Y, H:i') }}
               </td>
-              <td class="px-4 py-3">
-                <div class="flex items-center gap-2">
-                  <a href="{{ route('patients.edit', $p->id_pasien) }}"
-                     class="inline-flex items-center gap-1 rounded-full border border-slate-300 text-slate-700
-                            hover:bg-brand-700 hover:text-white px-3 py-1.5">
-                    <x-heroicon-o-pencil-square class="w-5 h-5" />
+              <td class="flex items-center gap-2 px-4 py-3">
+                {{-- Tombol Edit --}}
+                <a href="{{ route('patients.edit', $p->id_pasien) }}"
+                class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-3 py-1.5 text-sm hover:bg-slate-100">
+                    <x-heroicon-o-pencil-square class="w-4 h-4"/>
                     Edit
-                  </a>
+                </a>
 
-                  <form action="{{ route('patients.destroy', $p->id_pasien) }}" method="POST"
-                        onsubmit="return confirm('Hapus pasien ini? Tindakan tidak dapat dibatalkan.');">
+                {{-- Tombol Hapus --}}
+                <form action="{{ route('patients.destroy', $p->id_pasien) }}" method="POST" onsubmit="return confirm('Yakin hapus pasien ini?')">
                     @csrf
                     @method('DELETE')
                     <button type="submit"
-                            class="inline-flex items-center gap-1 rounded-full bg-red-600 hover:bg-red-500 text-white px-3 py-1.5">
-                      <x-heroicon-o-trash class="w-5 h-5" />
-                      Hapus
+                            class="inline-flex items-center gap-2 rounded-full bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 text-sm">
+                        <x-heroicon-o-trash class="w-4 h-4"/>
+                        Hapus
                     </button>
-                  </form>
-                </div>
-              </td>
+                </form>
+
+                {{-- Tombol Cetak --}}
+                @if($p->id_antrian)
+                    <button type="button"
+                            data-queue-id="{{ $p->id_antrian }}"
+                            data-no="{{ $p->no_antrian }}"
+                            data-nama="{{ $p->nama }}"
+                            onclick="cetakAntrian(this)"
+                            class="inline-flex items-center gap-2 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 text-sm">
+                        <x-heroicon-o-printer class="w-4 h-4"/>
+                        Cetak
+                    </button>
+                @endif
+            </td>
+
+
+
             </tr>
           @empty
             <tr>
@@ -124,4 +138,59 @@
 
   </div>
 </div>
+
+<div id="print-card" class="w-[420px] rounded-2xl border border-slate-200 bg-white p-6 shadow-xl hidden">
+  <div class="text-center">
+    <p class="text-xs tracking-wide uppercase text-slate-500">Puskesmas Sukaraja</p>
+    <p class="mt-1 text-lg font-semibold text-slate-900">Nomor Antrian</p>
+    <div class="mt-3 text-5xl font-extrabold tabular-nums text-brand-700" id="pc-no">—</div>
+    <div class="mt-2 text-sm text-slate-500">Atas nama</div>
+    <div class="mt-1 text-xl font-semibold text-slate-800" id="pc-nama">—</div>
+    <div class="mt-4 text-[11px] text-slate-400" id="pc-date">{{ now()->translatedFormat('d F Y') }}</div>
+  </div>
+</div>
+
+{{-- html2canvas CDN --}}
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  window.cetakAntrian = async (btn) => {
+    const no   = btn.getAttribute('data-no')   || '-';
+    const nama = btn.getAttribute('data-nama') || '-';
+
+    // Isi data ke template
+    const card   = document.getElementById('print-card');
+    const elNo   = document.getElementById('pc-no');
+    const elNama = document.getElementById('pc-nama');
+
+    elNo.textContent = no;
+    elNama.textContent = nama;
+
+    // Tampilkan sementara agar bisa dirender
+    card.classList.remove('hidden');
+
+    // Render ke canvas
+    const canvas = await html2canvas(card, {
+      backgroundColor: null, // tetap putih dari card
+      scale: 2,              // kualitas lebih tajam
+      useCORS: true,
+    });
+
+    // Sembunyikan kembali
+    card.classList.add('hidden');
+
+    // Buat file PNG & download otomatis
+    const dataURL = canvas.toDataURL('image/png');
+    const a = document.createElement('a');
+    const safeNama = (nama || '-').toString().replace(/[^\w\-]+/g, '_');
+    a.href = dataURL;
+    a.download = `antrian-${no}-${safeNama}.png`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  };
+});
+</script>
+
 @endsection

@@ -8,12 +8,12 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="min-h-full bg-slate-50 text-slate-900 antialiased">
+<body class="min-h-full antialiased bg-slate-50 text-slate-900">
 
     {{-- Sidebar desktop --}}
-    <aside class="hidden lg:flex lg:flex-col lg:w-64 fixed inset-y-0 border-r border-slate-200 bg-white">
-        <div class="h-16 px-4 flex items-center gap-3 border-b border-slate-200">
-            <img src="{{ asset('images/logo.jpeg') }}" class="w-9 h-9 rounded-lg" alt="">
+    <aside class="fixed inset-y-0 hidden bg-white border-r lg:flex lg:flex-col lg:w-64 border-slate-200">
+        <div class="flex items-center h-16 gap-3 px-4 border-b border-slate-200">
+            <img src="{{ asset('images/logo.jpeg') }}" class="rounded-lg w-9 h-9" alt="">
             <span class="font-semibold hover:text-brand-700">Puskesmas Sukaraja</span>
         </div>
         @php
@@ -54,10 +54,18 @@
                 Saran dan Masukan
             </a>
 
+            {{-- Profil / Akun --}}
+            <a href="{{ route('user.me') }}"
+                class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ $active('user.me') }}"
+                aria-current="{{ request()->routeIs('user.me') ? 'page' : 'false' }}">
+                <x-heroicon-s-user-circle class="w-5 h-5 shrink-0" aria-hidden="true" />
+                Profil Saya
+            </a>
+
             {{-- Logout --}}
             <form action="{{ route('logout') }}" method="POST" class="pt-1">@csrf
                 <button type="submit"
-                    class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-red-600 hover:text-white">
+                    class="flex items-center w-full gap-3 px-3 py-2 text-sm rounded-lg text-slate-600 hover:bg-red-600 hover:text-white">
                     <x-heroicon-o-arrow-left-on-rectangle class="w-5 h-5 shrink-0" aria-hidden="true" />
                     Logout
                 </button>
@@ -71,7 +79,7 @@
 
     {{-- Main --}}
     <div class="lg:pl-64">
-        <main class="px-4 md:px-6 py-6">
+        <main class="px-4 py-6 md:px-6">
             @yield('content')
         </main>
     </div>

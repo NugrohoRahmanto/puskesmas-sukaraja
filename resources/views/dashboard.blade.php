@@ -5,10 +5,10 @@
     <div class="p-4">
         @if (Auth::check())
            {{-- GRID 2 KOLOM: KIRI = ANTRIAN, KANAN = INFORMASI --}}
-            <div class="grid items-start grid-cols-1 gap-8 md:grid-cols-2">
+            <div class="grid items-start grid-cols-1 gap-8 md:grid-cols-3">
 
                 {{-- KIRI: Urutan Antrian (list sederhana: No + Nama) --}}
-                <section role="region" aria-labelledby="urutan-antrian" class="relative">
+                <section role="region" aria-labelledby="urutan-antrian" class="relative md:col-span-1">
                 <div class="bg-slate-100 rounded-[22px] overflow-hidden">
                     {{-- Header --}}
                     <div class="sticky top-0 px-4 py-3 border-b bg-brand-700 border-slate-200">
@@ -29,8 +29,8 @@
                         {{-- Sticky header tabel --}}
                         <thead class="sticky top-0 z-10">
                             <tr class="bg-white">
-                            <th class="px-4 py-2 text-left font-medium border-b border-slate-200 w-[90px]">No</th>
-                            <th class="px-4 py-2 font-medium text-left border-b border-slate-200">Pasien</th>
+                            <th class="px-4 py-2 text-left font-medium border-b border-slate-200 w-[150px]">No Antrian</th>
+                            <th class="px-4 py-2 font-medium text-left border-b border-slate-200">Nama Pasien</th>
                             </tr>
                         </thead>
 
@@ -53,7 +53,7 @@
 
 
                 {{-- KANAN: Informasi Terbaru --}}
-                <section aria-labelledby="news-title" class="w-full max-w-3xl mx-auto">
+                <section aria-labelledby="news-title" class="w-full max-w-3xl mx-auto md:col-span-2">
                     <h2 id="news-title" class="text-xl font-semibold text-center md:text-2xl">
                         Informasi Terbaru Puskesmas Sukaraja
                     </h2>
@@ -104,7 +104,7 @@
             </div>
 
             {{-- CTA --}}
-            <div class="flex flex-wrap gap-2 mt-8">
+            {{-- <div class="flex flex-wrap gap-2 mt-8">
                 <a href="{{ route('patients.index') }}"
                 class="inline-flex items-center px-4 py-2 text-sm text-white rounded-xl bg-brand-700 hover:bg-brand-600">
                     Lihat Daftar Pasien
@@ -117,13 +117,13 @@
                 class="inline-flex items-center px-4 py-2 text-sm text-white rounded-xl bg-brand-700 hover:bg-brand-600">
                     Lihat Akun
                 </a>
-            </div>
+            </div> --}}
 
         @else
-            <div class="grid items-start grid-cols-1 gap-8 lg:grid-cols-2">
+            <div class="grid items-start grid-cols-1 gap-8 md:grid-cols-3">
 
             {{-- KIRI: Antrian Masuk (list sederhana) --}}
-            <section role="region" aria-labelledby="urutan-antrian" class="relative">
+            <section role="region" aria-labelledby="urutan-antrian" class="relative md:col-span-1">
             <div class="bg-slate-100 rounded-[22px] overflow-hidden">
                 {{-- Header --}}
                 <div class="sticky top-0 px-4 py-3 border-b bg-brand-700 border-slate-200">
@@ -144,8 +144,8 @@
                     {{-- Sticky header tabel --}}
                     <thead class="sticky top-0 z-10">
                         <tr class="bg-white">
-                        <th class="px-4 py-2 text-left font-medium border-b border-slate-200 w-[90px]">No</th>
-                        <th class="px-4 py-2 font-medium text-left border-b border-slate-200">Pasien</th>
+                        <th class="px-4 py-2 text-left font-medium border-b border-slate-200 w-[150px]">No Antrian</th>
+                        <th class="px-4 py-2 font-medium text-left border-b border-slate-200">Nama Pasien</th>
                         </tr>
                     </thead>
 
@@ -167,7 +167,7 @@
 
 
             {{-- KANAN: Panel Informasi --}}
-            <section aria-labelledby="panel-informasi">
+            <section aria-labelledby="panel-informasi" class="md:col-span-2">
                 <div class="relative bg-white rounded-[22px] overflow-visible pb-4 border border-slate-200">
                     <div class="px-4 py-3 border-b bg-brand-700 backdrop-blur border-slate-200">
                         <h2 class="text-lg font-semibold tracking-wide text-center text-white uppercase">
