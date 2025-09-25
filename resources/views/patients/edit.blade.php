@@ -74,7 +74,7 @@
 
       <div class="flex items-center justify-end gap-3 mt-8">
         <a href="{{ route('patients.index') }}"
-           class="inline-flex items-center gap-2 rounded-full border border-slate-300 text-slate-700
+           class="inline-flex items-center gap-2 rounded-full border bg-white border-slate-300 text-slate-700
                   hover:bg-slate-100 px-5 py-2.5">
           <x-heroicon-o-arrow-left class="w-5 h-5" />
           Kembali

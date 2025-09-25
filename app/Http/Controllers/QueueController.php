@@ -135,7 +135,8 @@ class QueueController extends Controller
 
         if ($patient) {
             PatientHistory::create([
-                'nama_lengkap' => $patient->nama_lengkap,
+                'nama' => $patient->nama,
+                'nik' => $patient->nik,
                 'usia' => $patient->usia,
                 'jenis_kelamin' => $patient->jenis_kelamin,
                 'no_tel' => $patient->no_tel,

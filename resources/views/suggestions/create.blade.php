@@ -43,7 +43,7 @@
 
       <div class="flex items-center justify-end gap-2">
         <a href="{{ route('dashboard') }}"
-           class="inline-flex items-center gap-2 rounded-full bg-white hover:bg-red-600 hover:text-white
+           class="inline-flex items-center gap-2 border rounded-full bg-white hover:bg-slate-100 border-slate-300
                        text-sm px-6 py-2.5">
           Batal
         </a>

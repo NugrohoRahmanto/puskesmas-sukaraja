@@ -1,52 +1,62 @@
 @extends('layouts.admin')
+@section('title','Dashboard Admin')
 
 @section('content')
-<div class="p-4">
-    <h1 class="mb-4 text-2xl font-bold">Dashboard Admin</h1>
+<div class="px-4 pt-10 pb-8 min-h-[100svh] grid place-items-center">
+  <div class="relative w-full max-w-6xl bg-slate-100 rounded-[22px] p-6 md:p-8">
 
-    <div class="flex flex-wrap gap-2 mb-4">
-        <a href="{{ route('admin.users.indexAdmin') }}" class="btn btn-primary">Manajemen Pengguna</a>
-        <a href="{{ route('admin.patients.indexAdmin') }}" class="btn btn-primary">Manajemen Pasien</a>
-        <a href="{{ route('admin.informations.indexAdmin') }}" class="btn btn-primary">Manajemen Informasi</a>
-        <a href="{{ route('admin.suggestions.indexAdmin') }}" class="btn btn-primary">Manajemen Saran</a>
-        <a href="{{ route('admin.queues.indexAdmin') }}" class="btn btn-primary">Manajemen Antrian</a>
-        <a href="{{ route('admin.patientsHistory.indexAdmin') }}" class="btn btn-primary">Riwayat Pasien</a>
+    {{-- PILL HEADER --}}
+    <div class="absolute -translate-x-1/2 -top-5 left-1/2">
+      <div class="px-6 py-2 text-base md:text-lg font-semibold text-center text-white
+                  rounded-full shadow border border-slate-200 bg-brand-700 whitespace-nowrap">
+        Antrian Hari Ini
+      </div>
     </div>
 
-    <div class="mt-6">
-        <h2 class="mb-2 text-xl font-semibold">Antrian Hari Ini</h2>
+    {{-- ANTRIAN HARI INI --}}
+    <section aria-labelledby="today-queues">
+      @if($queues->isEmpty())
+        <div class="px-4 py-10 text-center text-slate-600 bg-white border border-slate-200 rounded-2xl">
+          Tidak ada pasien dalam antrian hari ini.
+        </div>
+      @else
+        <div class="overflow-x-auto bg-white border border-slate-200 rounded-2xl">
+          <table class="min-w-full text-sm">
+            <thead class="bg-slate-50 text-slate-700 border-b border-slate-200">
+              <tr>
+                <th class="px-4 py-3 text-left font-medium">No Antrian</th>
+                <th class="px-4 py-3 text-left font-medium">NIK</th>
+                <th class="px-4 py-3 text-left font-medium">Nama Pasien</th>
+                <th class="px-4 py-3 text-left font-medium">Aksi</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+              @foreach($queues as $q)
+                <tr class="bg-white hover:bg-slate-50">
+                  <td class="px-4 py-3 font-semibold tabular-nums">{{ $q->no_antrian }}</td>
+                  <td class="px-4 py-3">{{ $q->patient->nik ?? '—' }}</td>
+                  <td class="px-4 py-3">
+                    {{ $q->patient->nama_lengkap ?? $q->patient->nama ?? '—' }}
+                  </td>
+                  <td class="px-4 py-3">
+                    <form action="{{ route('admin.call', $q->id_antrian ?? $q->id) }}" method="POST"
+                          onsubmit="return confirm('Yakin ingin memanggil pasien ini?');" class="inline">
+                      @csrf
+                      <button type="submit"
+                              class="inline-flex items-center gap-2 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 text-sm">
+                        <x-heroicon-o-phone class="w-4 h-4"/>
+                        Panggil
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+      @endif
+    </section>
 
-        @if($queues->isEmpty())
-            <p class="text-gray-500">Tidak ada pasien dalam antrian hari ini.</p>
-        @else
-            <table class="min-w-full border border-gray-300">
-                <thead class="bg-gray-100">
-                    <tr>
-                        <th class="px-4 py-2 border">No Antrian</th>
-                        <th class="px-4 py-2 border">NIK</th>
-                        <th class="px-4 py-2 border">Nama Pasien</th>
-                        <th class="px-4 py-2 border">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($queues as $queue)
-                        <tr class="text-center">
-                            <td class="px-4 py-2 border">{{ $queue->no_antrian }}</td>
-                            <td class="px-4 py-2 border">{{ $queue->patient->nik }}</td>
-                            <td class="px-4 py-2 border">{{ $queue->patient->nama }}</td>
-                            <td class="px-4 py-2 border">
-                                <form action="{{ route('admin.call', $queue->id_antrian) }}" method="POST" onsubmit="return confirm('Yakin ingin memanggil pasien ini?');">
-                                    @csrf
-                                    <button type="submit" class="px-3 py-1 text-white bg-green-500 rounded hover:bg-green-600">
-                                        Call
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @endif
-    </div>
+  </div>
 </div>
 @endsection
