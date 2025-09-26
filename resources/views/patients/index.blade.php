@@ -64,7 +64,7 @@
         <tbody class="divide-y divide-slate-200">
           @forelse ($patients as $i => $p)
             <tr class="bg-white">
-              <td class="px-4 py-3">{{ $p->id_antrian }}</td>
+              <td class="px-4 py-3">{{ $p->no_antrian }}</td>
               <td class="px-4 py-3 font-medium text-slate-800">{{ $p->nik }}</td>
               <td class="px-4 py-3">{{ $p->nama }}</td>
               <td class="px-4 py-3">
