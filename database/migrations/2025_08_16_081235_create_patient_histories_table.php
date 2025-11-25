@@ -16,6 +16,7 @@ return new class extends Migration
 
             $table->string('nik');
             $table->string('nama');
+            $table->enum('gender', ['Laki-laki', 'Perempuan'])->nullable();
             $table->enum('pernah_berobat', ['Ya', 'Tidak']);
 
             $table->date('tanggal');

@@ -10,14 +10,15 @@ return new class extends Migration
     {
         Schema::create('patients', function (Blueprint $table) {
             $table->uuid('id_pasien')->primary();
-            $table->uuid('id_pengguna');
+            $table->uuid('id_pengguna')->nullable();
             $table->foreign('id_pengguna')
-                  ->references('id_pengguna')
-                  ->on('users')
-                  ->onDelete('cascade');
+                ->references('id_pengguna')
+                ->on('users')
+                ->nullOnDelete();
 
             $table->string('nik')->unique();          // nomor induk kependudukan
             $table->string('nama');                   // nama pasien
+            $table->enum('gender', ['Laki-laki', 'Perempuan'])->default('Laki-laki');
             $table->enum('pernah_berobat', ['Ya','Tidak']); // status pernah berobat
 
             $table->timestamps();

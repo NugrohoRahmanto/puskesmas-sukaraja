@@ -216,7 +216,16 @@ class PatientController extends Controller
             ? $query->get()
             : $query->paginate($perPage)->appends($request->except('page'));
 
-        return view('admin.patients.index', compact('patients', 'perPage', 'perPageOptions'));
+        $perPageValue = (string) $perPage;
+        $queryParams = $request->except('per_page', 'page');
+
+        return view('admin.patients.index', compact(
+            'patients',
+            'perPage',
+            'perPageOptions',
+            'perPageValue',
+            'queryParams'
+        ));
     }
 
     public function editAdmin($id_pasien)
