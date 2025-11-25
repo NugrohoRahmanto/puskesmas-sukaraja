@@ -52,6 +52,31 @@
         @error('nama') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
       </div>
 
+      {{-- Gender --}}
+      <div>
+        <span class="block text-sm font-medium text-slate-700">Jenis Kelamin</span>
+        @php $genderValue = old('gender', $history->gender ?? 'Laki-laki'); @endphp
+        <div class="flex flex-wrap gap-3 mt-2">
+          <label class="cursor-pointer">
+            <input type="radio" name="gender" value="Laki-laki" class="sr-only peer"
+                   {{ $genderValue === 'Laki-laki' ? 'checked' : '' }}>
+            <span class="inline-flex items-center rounded-full border px-4 py-2 text-sm transition
+                         border-slate-200 bg-white text-slate-600 peer-checked:border-brand-400 peer-checked:bg-brand-50 peer-checked:text-brand-700">
+              Laki-laki
+            </span>
+          </label>
+          <label class="cursor-pointer">
+            <input type="radio" name="gender" value="Perempuan" class="sr-only peer"
+                   {{ $genderValue === 'Perempuan' ? 'checked' : '' }}>
+            <span class="inline-flex items-center rounded-full border px-4 py-2 text-sm transition
+                         border-slate-200 bg-white text-slate-600 peer-checked:border-brand-400 peer-checked:bg-brand-50 peer-checked:text-brand-700">
+              Perempuan
+            </span>
+          </label>
+        </div>
+        @error('gender') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+      </div>
+
       {{-- Pernah Berobat --}}
       <div>
         <label for="pernah_berobat" class="block text-sm font-medium text-slate-700">Pernah Berobat</label>

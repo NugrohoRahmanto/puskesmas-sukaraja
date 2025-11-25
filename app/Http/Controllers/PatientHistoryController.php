@@ -12,15 +12,42 @@ class PatientHistoryController extends Controller
         $this->middleware('auth');
     }
 
-    public function indexAdmin()
+    public function indexAdmin(Request $request)
     {
         if (Auth::check() && Auth::user()->role != 'admin') {
             return redirect()->route('dashboard')
                              ->withErrors('You are not authorized to access this page');
         }
 
-        $histories = PatientHistory::orderBy('tanggal', 'desc')->get();
-        return view('admin.patientsHistory.index', compact('histories'));
+        $filters = $request->validate([
+            'start_date' => ['nullable','date'],
+            'end_date'   => ['nullable','date','after_or_equal:start_date'],
+        ]);
+
+        $pagination = $this->resolvePerPage($request);
+        $perPage = $pagination['perPage'];
+        $perPageOptions = $pagination['options'];
+
+        $historiesQuery = PatientHistory::orderBy('tanggal', 'desc');
+
+        if (!empty($filters['start_date'])) {
+            $historiesQuery->whereDate('tanggal', '>=', $filters['start_date']);
+        }
+
+        if (!empty($filters['end_date'])) {
+            $historiesQuery->whereDate('tanggal', '<=', $filters['end_date']);
+        }
+
+        $histories = $perPage === 'all'
+            ? $historiesQuery->get()
+            : $historiesQuery->paginate($perPage)->appends($request->except('page'));
+
+        return view('admin.patientsHistory.index', [
+            'histories' => $histories,
+            'filters'   => $filters,
+            'perPage'   => $perPage,
+            'perPageOptions' => $perPageOptions,
+        ]);
     }
 
     public function editAdmin($id_history)
@@ -49,6 +76,7 @@ class PatientHistoryController extends Controller
                 'regex:/^\d{16}$/',
             ],
             'nama' => ['required', 'string', 'max:255'],
+            'gender' => ['required','in:Laki-laki,Perempuan'],
             'pernah_berobat' => ['required', 'in:Ya,Tidak'],
             'tanggal' => ['required', 'date'],
             'no_antrian' => ['required', 'integer', 'min:1'],

@@ -21,6 +21,7 @@ use App\Http\Controllers\PatientHistoryController;
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/queues', [QueueController::class, 'index'])->name('queues.index');
 Route::get('/queues/{queue}', [QueueController::class, 'show'])->name('queues.show');
+Route::get('/informations/{information}', [InformationController::class, 'show'])->name('infos.show');
 
 /*
 |--------------------------------------------------------------------------
@@ -58,6 +59,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/my-patients', [PatientController::class, 'index'])->name('patients.index');
     Route::get('/patients/create-with-queue', [PatientController::class, 'createWithQueue'])->name('patients.createWithQueue');
     Route::post('/patients', [PatientController::class, 'storeWithQueue'])->name('patients.storeWithQueue');
+    Route::get('/patients/search', [PatientController::class, 'search'])->name('patients.search');
     Route::get('/patients/{id_pasien}/edit', [PatientController::class, 'edit'])->name('patients.edit');
     Route::put('/patients/{id_pasien}', [PatientController::class, 'update'])->name('patients.update');
     Route::delete('/patients/{id_pasien}', [PatientController::class, 'destroy'])->name('patients.destroy');
@@ -85,10 +87,10 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
     // Patients management
     Route::get('/patients', [PatientController::class, 'indexAdmin'])->name('admin.patients.indexAdmin');
+    Route::post('/patients', [PatientController::class, 'storeAdmin'])->name('admin.patients.storeAdmin');
     Route::get('/patients/{id_pasien}/edit', [PatientController::class, 'editAdmin'])->name('admin.patients.editAdmin');
     Route::put('/patients/{id_pasien}', [PatientController::class, 'updateAdmin'])->name('admin.patients.updateAdmin');
     Route::delete('/patients/{id_pasien}', [PatientController::class, 'destroyAdmin'])->name('admin.patients.destroyAdmin');
-    Route::get('/patients/search', [PatientController::class, 'search'])->name('patients.search');
 
     // Information management
     Route::get('/informations', [InformationController::class, 'indexAdmin'])->name('admin.informations.indexAdmin');

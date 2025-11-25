@@ -31,14 +31,23 @@ class SuggestionController extends Controller
         return redirect()->route('dashboard')->with('success', 'Saran berhasil ditambahkan.');
     }
 
-    public function indexAdmin()
+    public function indexAdmin(Request $request)
     {
         if (Auth::check() && Auth::user()->role != 'admin') {
             return redirect()->route('dashboard')->withErrors('You are not authorized to access this page');
         }
 
-        $suggestions = Suggestion::with('user')->orderBy('created_at', 'desc')->get();
-        return view('admin.suggestions.index', compact('suggestions'));
+        $pagination = $this->resolvePerPage($request);
+        $perPage = $pagination['perPage'];
+        $perPageOptions = $pagination['options'];
+
+        $query = Suggestion::with('user')->orderBy('created_at', 'desc');
+
+        $suggestions = $perPage === 'all'
+            ? $query->get()
+            : $query->paginate($perPage)->appends($request->except('page'));
+
+        return view('admin.suggestions.index', compact('suggestions', 'perPage', 'perPageOptions'));
     }
 
     public function editAdmin($id_saran)

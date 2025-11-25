@@ -73,10 +73,11 @@
     {{-- PREVIEW BESAR --}}
     <div>
       <div class="relative w-full overflow-hidden rounded-xl border border-slate-200 bg-white">
-        @if($info->cover)
+        @php $coverUrl = $info->cover_url; @endphp
+        @if($coverUrl)
           <img
             id="cover-current"
-            src="{{ asset('storage/covers/'.$info->cover) }}"
+            src="{{ $coverUrl }}"
             alt="Cover saat ini"
             class="block w-full h-64 md:h-72 object-cover cursor-zoom-in"
             onclick="openCoverModal(this.src)"
@@ -114,10 +115,10 @@
                 class="hidden inline-flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-sm hover:bg-slate-100">
           <x-heroicon-o-arrow-path class="w-4 h-4" /> Batalkan Pilihan
         </button>
-        @if($info->cover)
+        @if($coverUrl)
           <button type="button" id="btn-open-modal"
                   class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-sm bg-white hover:bg-slate-100"
-                  onclick="openCoverModal('{{ asset('storage/covers/'.$info->cover) }}')">
+                  onclick="openCoverModal('{{ $coverUrl }}')">
             <x-heroicon-o-arrows-pointing-out class="w-4 h-4" /> Perbesar
           </button>
         @endif

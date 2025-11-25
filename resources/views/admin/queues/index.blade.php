@@ -7,39 +7,76 @@
 
     {{-- PILL HEADER --}}
     <div class="absolute -translate-x-1/2 -top-5 left-1/2">
-      <div class="px-6 py-2 text-base md:text-lg font-semibold text-center text-white
-                  rounded-full shadow border border-slate-200 bg-brand-700 whitespace-nowrap">
+      <div class="px-6 py-2 text-base font-semibold text-center text-white border rounded-full shadow md:text-lg border-slate-200 bg-brand-700 whitespace-nowrap">
         Daftar Antrian
       </div>
     </div>
 
+    @php
+      $perPageValue = (string) ($perPage ?? 10);
+      $perPageOptionsList = $perPageOptions ?? [10,25,50,'all'];
+      $queryParams = request()->except('per_page','page');
+    @endphp
+
     {{-- FLASH --}}
     @if(session('success'))
-      <div class="px-4 py-2 mb-4 text-sm rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-800">
+      <div class="px-4 py-2 mb-4 text-sm border rounded-lg border-emerald-200 bg-emerald-50 text-emerald-800">
         {{ session('success') }}
       </div>
     @endif
     @if ($errors->any())
-      <div class="px-4 py-2 mb-4 text-sm rounded-lg border border-red-200 bg-red-50 text-red-700">
+      <div class="px-4 py-2 mb-4 text-sm text-red-700 border border-red-200 rounded-lg bg-red-50">
         Terjadi kesalahan. Silakan coba lagi.
       </div>
     @endif
 
+    <div class="flex flex-col w-full gap-3 mb-4 md:flex-row md:items-center md:justify-between">
+      <div class="text-sm font-semibold text-slate-600">Antrian Hari Ini</div>
+
+      <form method="GET" action="{{ url()->current() }}"
+            class="flex items-center gap-2 text-sm text-slate-600">
+        @foreach($queryParams as $name => $value)
+          @if(is_array($value))
+            @foreach($value as $item)
+              <input type="hidden" name="{{ $name }}[]" value="{{ $item }}">
+            @endforeach
+          @else
+            <input type="hidden" name="{{ $name }}" value="{{ $value }}">
+          @endif
+        @endforeach
+        <span class="text-slate-500">Tampilkan</span>
+        <div class="relative">
+          <select name="per_page" onchange="this.form.submit()"
+                  class="rounded-full border border-slate-200 bg-white px-3 py-1.5 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-brand-200">
+            @foreach($perPageOptionsList as $option)
+              @php $label = $option === 'all' ? 'Semua' : $option; @endphp
+              <option value="{{ $option }}" {{ $perPageValue === (string) $option ? 'selected' : '' }}>
+                {{ $label }} data
+              </option>
+            @endforeach
+          </select>
+          <span class="absolute inset-y-0 flex items-center pointer-events-none right-3 text-slate-400">
+            <x-heroicon-o-chevron-down class="w-4 h-4" />
+          </span>
+        </div>
+      </form>
+    </div>
+
     {{-- TABEL --}}
     @if($queues->isEmpty())
-      <div class="px-4 py-10 text-center text-slate-600 bg-white border border-slate-200 rounded-2xl">
+      <div class="px-4 py-10 text-center bg-white border text-slate-600 border-slate-200 rounded-2xl">
         Tidak ada antrian saat ini.
       </div>
     @else
       <div class="overflow-x-auto bg-white border rounded-2xl border-slate-200">
         <table class="min-w-full text-sm">
-          <thead class="bg-slate-50 text-slate-700 border-b border-slate-200">
+          <thead class="border-b bg-slate-50 text-slate-700 border-slate-200">
             <tr>
-              <th class="px-4 py-3 text-left font-medium">No Antrian</th>
-              <th class="px-4 py-3 text-left font-medium">NIK</th>
-              <th class="px-4 py-3 text-left font-medium">Nama</th>
-              <th class="px-4 py-3 text-left font-medium">Pernah Berobat</th>
-              <th class="px-4 py-3 text-left font-medium">Aksi</th>
+              <th class="px-4 py-3 font-medium text-left">No Antrian</th>
+              <th class="px-4 py-3 font-medium text-left">NIK</th>
+              <th class="px-4 py-3 font-medium text-left">Nama</th>
+              <th class="px-4 py-3 font-medium text-left">Pernah Berobat</th>
+              <th class="px-4 py-3 font-medium text-left">Aksi</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-200">
@@ -50,7 +87,10 @@
                 $nik  = $q->patient->nik ?? '—';
               @endphp
               <tr class="bg-white hover:bg-slate-50">
-                <td class="px-4 py-3 font-semibold tabular-nums">{{ $q->no_antrian }}</td>
+                <td class="px-4 py-3">
+                  <div class="font-semibold text-slate-900 tabular-nums">{{ $q->display_no ?? $loop->iteration }}</div>
+                  <p class="text-xs text-slate-400">DB: {{ $q->no_antrian ?? '—' }}</p>
+                </td>
                 <td class="px-4 py-3">{{ $nik }}</td>
                 <td class="px-4 py-3">{{ $nama }}</td>
                 <td class="px-4 py-3">

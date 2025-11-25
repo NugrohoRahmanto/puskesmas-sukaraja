@@ -12,7 +12,18 @@ class QueueController extends Controller
 {
     public function index()
     {
-        $queues = Queue::all();
+        $today = Carbon::now('Asia/Jakarta')->toDateString();
+
+        $queues = Queue::with('patient')
+            ->whereDate('tanggal', $today)
+            ->orderBy('created_at')
+            ->get()
+            ->values()
+            ->map(function ($queue, $index) {
+                $queue->display_no = $index + 1;
+                return $queue;
+            });
+
         return view('queues.index', compact('queues'));
     }
 
@@ -69,14 +80,29 @@ class QueueController extends Controller
         return redirect()->route('queues.index')->with('success', 'Antrian berhasil dihapus.');
     }
 
-    public function indexAdmin()
+    public function indexAdmin(Request $request)
     {
         if (Auth::check() && Auth::user()->role != 'admin') {
             return redirect()->route('dashboard')->withErrors('You are not authorized to access this page');
         }
 
-        $queues = Queue::with('patient')->orderBy('no_antrian')->get();
-        return view('admin.queues.index', compact('queues'));
+        $today = Carbon::now('Asia/Jakarta')->toDateString();
+
+        $pagination = $this->resolvePerPage($request);
+        $perPage = $pagination['perPage'];
+        $perPageOptions = $pagination['options'];
+
+        $query = Queue::with('patient')
+            ->whereDate('tanggal', $today)
+            ->orderBy('created_at');
+
+        $queues = $perPage === 'all'
+            ? $query->get()
+            : $query->paginate($perPage)->appends($request->except('page'));
+
+        $queues = $this->applyDisplayNumbers($queues);
+
+        return view('admin.queues.index', compact('queues', 'perPage', 'perPageOptions'));
     }
 
     public function editAdmin($id_antrian)
@@ -135,12 +161,12 @@ class QueueController extends Controller
 
         if ($patient) {
             PatientHistory::create([
+                'id_pasien'      => $patient->id_pasien,
                 'nama' => $patient->nama,
                 'nik' => $patient->nik,
-                'usia' => $patient->usia,
-                'jenis_kelamin' => $patient->jenis_kelamin,
-                'no_tel' => $patient->no_tel,
-                'tanggal' => Carbon::today(),
+                'gender' => $patient->gender ?? 'Laki-laki',
+                'pernah_berobat' => $patient->pernah_berobat,
+                'tanggal' => Carbon::now('Asia/Jakarta')->toDateString(),
                 'no_antrian' => $queue->no_antrian,
             ]);
 
@@ -150,5 +176,29 @@ class QueueController extends Controller
         $queue->delete();
 
         return redirect()->route('admin.queues.indexAdmin')->with('success', 'Pasien telah dipanggil, masuk ke riwayat, dan dihapus dari tabel pasien.');
+    }
+
+    protected function applyDisplayNumbers($queues)
+    {
+        $offset = 0;
+
+        if ($queues instanceof \Illuminate\Contracts\Pagination\Paginator) {
+            $offset = ($queues->currentPage() - 1) * $queues->perPage();
+            $collection = $queues->getCollection()->values();
+        } else {
+            $collection = $queues->values();
+        }
+
+        $collection = $collection->map(function ($queue, $index) use ($offset) {
+            $queue->display_no = $offset + $index + 1;
+            return $queue;
+        });
+
+        if ($queues instanceof \Illuminate\Contracts\Pagination\Paginator) {
+            $queues->setCollection($collection);
+            return $queues;
+        }
+
+        return $collection;
     }
 }

@@ -27,6 +27,7 @@ class PatientHistory extends Model
         'id_pasien',
         'nik',
         'nama',
+        'gender',
         'pernah_berobat',
         'tanggal',
         'no_antrian',

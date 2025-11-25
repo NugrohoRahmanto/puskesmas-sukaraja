@@ -84,7 +84,10 @@
             <tbody class="divide-y divide-slate-200">
               @foreach($queues as $q)
                 <tr class="bg-white hover:bg-slate-50">
-                  <td class="px-4 py-3 font-semibold tabular-nums">{{ $q->no_antrian }}</td>
+                  <td class="px-4 py-3">
+                    <div class="font-semibold tabular-nums text-slate-900">{{ $q->display_no ?? $loop->iteration }}</div>
+                    <p class="text-xs text-slate-400">DB: {{ $q->no_antrian ?? '—' }}</p>
+                  </td>
                   <td class="px-4 py-3">{{ $q->patient->nik ?? '—' }}</td>
                   <td class="px-4 py-3">{{ $q->patient->nama_lengkap ?? $q->patient->nama ?? '—' }}</td>
                   <td class="px-4 py-3">

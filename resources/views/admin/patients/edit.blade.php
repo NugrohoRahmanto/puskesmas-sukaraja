@@ -52,6 +52,23 @@
         @error('nama') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
       </div>
 
+      {{-- Gender --}}
+      <div>
+        <label for="gender" class="block text-sm font-medium text-slate-700">Jenis Kelamin</label>
+        @php $genderValue = old('gender', $patient->gender ?? 'Laki-laki'); @endphp
+        <div class="relative">
+          <select id="gender" name="gender"
+                  class="{{ $select }} @error('gender') border-red-300 ring-1 ring-red-200 @enderror" required>
+            <option value="Laki-laki" {{ $genderValue === 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+            <option value="Perempuan" {{ $genderValue === 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+          </select>
+          <span class="pointer-events-none absolute inset-y-0 right-4 flex items-center text-slate-400">
+            <x-heroicon-o-chevron-down class="w-5 h-5" />
+          </span>
+        </div>
+        @error('gender') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+      </div>
+
       {{-- Pernah Berobat --}}
       <div>
         <label for="pernah_berobat" class="block text-sm font-medium text-slate-700">Pernah Berobat</label>

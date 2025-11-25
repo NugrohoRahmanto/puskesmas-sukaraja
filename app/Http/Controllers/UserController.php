@@ -13,7 +13,7 @@ class UserController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function me()
     {
         $user = Auth::user();
@@ -73,14 +73,23 @@ class UserController extends Controller
 
         return redirect()->route('user.me')->with('success', 'Password berhasil diperbarui.');
     }
-    
-    public function indexAdmin()
+
+    public function indexAdmin(Request $request)
     {
         if (Auth::check() && Auth::user()->role !== 'admin') {
             return redirect()->route('dashboard')->withErrors('You are not authorized to access this page');
         }
-        $users = User::all();
-        return view('admin.users.index', compact('users'));
+        $pagination = $this->resolvePerPage($request);
+        $perPage = $pagination['perPage'];
+        $perPageOptions = $pagination['options'];
+
+        $query = User::orderBy('nama_lengkap');
+
+        $users = $perPage === 'all'
+            ? $query->get()
+            : $query->paginate($perPage)->appends($request->except('page'));
+
+        return view('admin.users.index', compact('users', 'perPage', 'perPageOptions'));
     }
 
     public function editAdmin($id_pengguna)

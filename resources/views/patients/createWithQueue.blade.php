@@ -13,19 +13,13 @@
                 </div>
             </div>
 
-            @php
-                $input =
-                    'mt-2 w-full rounded-full bg-white border border-slate-200 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-brand-400 placeholder:text-slate-400';
-                $select = 'appearance-none pr-10 ' . $input;
-            @endphp
-
             <form action="{{ route('patients.storeWithQueue') }}" method="POST" class="mt-6">
             @csrf
 
             @php
                 $input =
                     'mt-2 w-full rounded-full bg-white border border-slate-200 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-brand-400 placeholder:text-slate-400';
-                $select = 'appearance-none pr-10 ' . $input;
+                $select = 'mt-2 w-full rounded-full bg-white border border-slate-200 px-4 py-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-brand-400 placeholder:text-slate-400 appearance-none';
             @endphp
 
             <div class="grid gap-8">
@@ -53,6 +47,25 @@
                     @enderror
                 </div>
 
+                {{-- Gender --}}
+                <div>
+                    <label for="gender" class="block text-sm font-medium text-slate-700">Jenis Kelamin</label>
+                    <div class="relative">
+                        <select id="gender" name="gender" required
+                                class="{{ $select }} @error('gender') border-red-300 ring-1 ring-red-200 @enderror">
+                            <option value="Laki-laki" {{ old('gender', 'Laki-laki') === 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                            <option value="Perempuan" {{ old('gender') === 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                        </select>
+                        <span class="absolute inset-y-0 flex items-center pointer-events-none right-4 text-slate-400">
+                            <x-heroicon-o-chevron-down class="w-5 h-5" />
+                        </span>
+                    </div>
+                    @error('gender')
+                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+
                 {{-- Pernah Berobat --}}
                 <div>
                     <label for="pernah_berobat" class="block text-sm font-medium text-slate-700">Sudah Pernah Berobat Sebelumnya?</label>
@@ -63,6 +76,9 @@
                             <option value="Ya" {{ old('pernah_berobat') === 'Ya' ? 'selected' : '' }}>Ya</option>
                             <option value="Tidak" {{ old('pernah_berobat') === 'Tidak' ? 'selected' : '' }}>Tidak</option>
                         </select>
+                        <span class="absolute inset-y-0 flex items-center pointer-events-none right-4 text-slate-400">
+                            <x-heroicon-o-chevron-down class="w-5 h-5" />
+                        </span>
                     </div>
                     @error('pernah_berobat')
                         <p class="mt-1 text-xs text-red-600">{{ $message }}</p>

@@ -39,18 +39,6 @@
                 Beranda
             </a>
 
-            {{-- Riwayat Pasien --}}
-            <a href="{{ route('admin.patientsHistory.indexAdmin') }}"
-                class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ $active('admin.patientsHistory.indexAdmin*') }}"
-                aria-current="{{ $is('admin.patientsHistory.indexAdmin*') ? 'page' : 'false' }}">
-                @if ($is('admin.patientsHistory.indexAdmin*'))
-                    <x-heroicon-s-clipboard-document-list class="w-5 h-5 shrink-0" aria-hidden="true" />
-                @else
-                    <x-heroicon-o-clipboard-document-list class="w-5 h-5 shrink-0" aria-hidden="true" />
-                @endif
-                Riwayat Pasien
-            </a>
-
             {{-- Manajemen Pasien --}}
             <a href="{{ route('admin.patients.indexAdmin') }}"
                 class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ $active('admin.patients.indexAdmin*') }}"
@@ -61,6 +49,30 @@
                     <x-heroicon-o-user-group class="w-5 h-5 shrink-0" aria-hidden="true" />
                 @endif
                 Manajemen Pasien
+            </a>
+
+            {{-- Manajemen Antrian --}}
+            <a href="{{ route('admin.queues.indexAdmin') }}"
+                class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ $active('admin.queues.indexAdmin') }}"
+                aria-current="{{ $is('admin.queues.indexAdmin') ? 'page' : 'false' }}">
+                @if ($is('admin.queues.indexAdmin'))
+                    <x-heroicon-s-queue-list class="w-5 h-5 shrink-0" aria-hidden="true" />
+                @else
+                    <x-heroicon-o-queue-list class="w-5 h-5 shrink-0" aria-hidden="true" />
+                @endif
+                Manajemen Antrian
+            </a>
+
+            {{-- Riwayat Pasien --}}
+            <a href="{{ route('admin.patientsHistory.indexAdmin') }}"
+                class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ $active('admin.patientsHistory.indexAdmin*') }}"
+                aria-current="{{ $is('admin.patientsHistory.indexAdmin*') ? 'page' : 'false' }}">
+                @if ($is('admin.patientsHistory.indexAdmin*'))
+                    <x-heroicon-s-clipboard-document-list class="w-5 h-5 shrink-0" aria-hidden="true" />
+                @else
+                    <x-heroicon-o-clipboard-document-list class="w-5 h-5 shrink-0" aria-hidden="true" />
+                @endif
+                Riwayat Pasien
             </a>
 
             {{-- Manajemen Informasi --}}
@@ -85,18 +97,6 @@
                     <x-heroicon-o-chat-bubble-left-right class="w-5 h-5 shrink-0" aria-hidden="true" />
                 @endif
                 Manajemen Saran dan Masukan
-            </a>
-
-            {{-- Manajemen Antrian --}}
-            <a href="{{ route('admin.queues.indexAdmin') }}"
-                class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ $active('admin.queues.indexAdmin') }}"
-                aria-current="{{ $is('admin.queues.indexAdmin') ? 'page' : 'false' }}">
-                @if ($is('admin.queues.indexAdmin'))
-                    <x-heroicon-s-queue-list class="w-5 h-5 shrink-0" aria-hidden="true" />
-                @else
-                    <x-heroicon-o-queue-list class="w-5 h-5 shrink-0" aria-hidden="true" />
-                @endif
-                Manajemen Antrian
             </a>
 
             {{-- Manajemen Pengguna --}}

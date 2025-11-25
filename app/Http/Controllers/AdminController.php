@@ -21,12 +21,17 @@ class AdminController extends Controller
             return redirect()->route('dashboard')->withErrors('You are not authorized to access this page');
         }
 
-        $today  = Carbon::today();
+        $today = Carbon::now('Asia/Jakarta')->startOfDay();
 
         $queues = Queue::with('patient')
             ->whereDate('tanggal', $today)
-            ->orderBy('no_antrian', 'asc')
-            ->get();
+            ->orderBy('created_at')
+            ->get()
+            ->values()
+            ->map(function ($queue, $index) {
+                $queue->display_no = $index + 1;
+                return $queue;
+            });
 
         $countPerDate = function (Carbon $date) {
             $q  = Queue::whereDate('tanggal', $date)->count();
@@ -114,7 +119,8 @@ class AdminController extends Controller
                 'nik'             => $patient->nik ?? null,
                 'nama'            => $patient->nama ?? $patient->nama_lengkap ?? '-',
                 'pernah_berobat'  => $patient->pernah_berobat ?? 'Tidak',
-                'tanggal'         => Carbon::today()->toDateString(),
+                'gender'          => $patient->gender ?? 'Laki-laki',
+                'tanggal'         => Carbon::now('Asia/Jakarta')->toDateString(),
                 'no_antrian'      => $queue->no_antrian,
             ]);
 

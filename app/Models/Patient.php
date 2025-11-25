@@ -25,6 +25,7 @@ class Patient extends Model
         'id_pengguna',
         'nik',
         'nama',
+        'gender',
         'pernah_berobat',
     ];
 
