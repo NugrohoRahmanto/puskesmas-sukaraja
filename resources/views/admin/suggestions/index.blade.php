@@ -13,6 +13,12 @@
       </div>
     </div>
 
+    @php
+      $perPageValue = (string) ($perPage ?? 10);
+      $perPageOptionsList = $perPageOptions ?? [10,25,50,'all'];
+      $queryParams = request()->except('per_page','page');
+    @endphp
+
     {{-- FLASH --}}
     @if(session('success'))
       <div class="px-4 py-2 mb-4 text-sm rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-800">
@@ -26,22 +32,54 @@
     @endif
 
     {{-- TOOLBAR (opsional search) --}}
-    @if(Route::has('admin.suggestions.search'))
-      <div class="mb-4">
-        <form method="GET" action="{{ route('admin.suggestions.search') }}" class="ml-auto">
+    <div class="flex flex-col w-full gap-3 mb-4 md:flex-row md:items-center md:justify-between">
+      <div class="flex flex-wrap items-center gap-2">
+        @if(Route::has('admin.suggestions.search'))
+          <form method="GET" action="{{ route('admin.suggestions.search') }}" class="md:w-72">
+            <div class="relative">
+              <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari pengguna / kata kunci"
+                     class="w-full rounded-full bg-white border border-slate-200 px-4 py-2.5 pr-10
+                            focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-brand-400
+                            placeholder:text-slate-400 text-sm" />
+              <button type="submit"
+                      class="absolute -translate-y-1/2 right-3 top-1/2 text-slate-400 hover:text-brand-700">
+                <x-heroicon-o-magnifying-glass class="w-5 h-5"/>
+              </button>
+            </div>
+          </form>
+        @endif
+      </div>
+
+      <div class="md:ml-auto">
+        <form method="GET" action="{{ url()->current() }}"
+              class="flex items-center gap-2 text-sm text-slate-600">
+          @foreach($queryParams as $name => $value)
+            @if(is_array($value))
+              @foreach($value as $item)
+                <input type="hidden" name="{{ $name }}[]" value="{{ $item }}">
+              @endforeach
+            @else
+              <input type="hidden" name="{{ $name }}" value="{{ $value }}">
+            @endif
+          @endforeach
+          <span class="text-slate-500">Tampilkan</span>
           <div class="relative">
-            <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari pengguna / kata kunci"
-                   class="w-72 rounded-full bg-white border border-slate-200 px-4 py-2.5 pr-10
-                          focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-brand-400
-                          placeholder:text-slate-400 text-sm" />
-            <button type="submit"
-                    class="absolute -translate-y-1/2 right-3 top-1/2 text-slate-400 hover:text-brand-700">
-              <x-heroicon-o-magnifying-glass class="w-5 h-5"/>
-            </button>
+            <select name="per_page" onchange="this.form.submit()"
+                    class="rounded-full border border-slate-200 bg-white px-3 py-1.5 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-brand-200">
+              @foreach($perPageOptionsList as $option)
+                @php $label = $option === 'all' ? 'Semua' : $option; @endphp
+                <option value="{{ $option }}" {{ $perPageValue === (string) $option ? 'selected' : '' }}>
+                  {{ $label }} data
+                </option>
+              @endforeach
+            </select>
+            <span class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-slate-400">
+              <x-heroicon-o-chevron-down class="w-4 h-4" />
+            </span>
           </div>
         </form>
       </div>
-    @endif
+    </div>
 
     {{-- TABEL --}}
     <div class="overflow-x-auto bg-white border rounded-2xl border-slate-200">

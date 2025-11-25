@@ -37,7 +37,7 @@
                         <tbody class="bg-brand-100">
                             @foreach ($queues as $q)
                             <tr class="border-b odd:bg-white even:bg-brand-50 border-slate-200">
-                                <td class="px-4 py-3 font-semibold tabular-nums">{{ $q->no_antrian }}</td>
+                                <td class="px-4 py-3 font-semibold tabular-nums">{{ $q->display_no ?? $loop->iteration }}</td>
                                 <td class="px-4 py-3">
                                 {{ $q->patient->nama ?? '-' }}
                                 </td>
@@ -61,25 +61,24 @@
 
                     <div class="grid gap-6 mt-8">
                         @forelse ($latestInfo as $info)
-                            @php
-                                $detailUrl = Route::has('infos.show') ? route('infos.show', $info->id) : '#';
+                                @php
+                                $detailUrl = Route::has('infos.show') ? route('infos.show', $info->id_informasi) : '#';
                             @endphp
 
                             <article class="flex gap-4 p-4 bg-white border rounded-lg border-slate-200">
                                 {{-- Gambar --}}
-                                @if ($info->cover)
-                                    <a href="{{ $detailUrl }}" class="block shrink-0">
-                                        <img src="{{ asset('storage/covers/' . $info->cover) }}" alt="{{ $info->judul }}"
-                                            loading="lazy" width="220" height="140"
-                                            class="w-[200px] h-[110px] object-cover rounded" />
-                                    </a>
-                                @else
-                                    <a href="{{ $detailUrl }}" class="block shrink-0">
+                                @php $coverUrl = $info->cover_url; @endphp
+                                <a href="{{ $detailUrl }}" class="block shrink-0">
+                                    @if ($coverUrl)
+                                        <img src="{{ $coverUrl }}" alt="{{ $info->judul }}"
+                                             loading="lazy" width="220" height="140"
+                                             class="w-[200px] h-[110px] object-cover rounded" />
+                                    @else
                                         <div class="w-[200px] h-[110px] rounded bg-slate-200 grid place-items-center text-slate-500 text-sm">
-                                            No Image
+                                            Tidak ada gambar
                                         </div>
-                                    </a>
-                                @endif
+                                    @endif
+                                </a>
 
                                 {{-- Teks --}}
                                 <div class="min-w-0">
@@ -152,7 +151,7 @@
                     <tbody class="bg-brand-100">
                         @foreach ($queues as $q)
                         <tr class="border-b odd:bg-white even:bg-brand-50 border-slate-200">
-                            <td class="px-4 py-3 font-semibold tabular-nums">{{ $q->no_antrian }}</td>
+                            <td class="px-4 py-3 font-semibold tabular-nums">{{ $q->display_no ?? $loop->iteration }}</td>
                             <td class="px-4 py-3">
                             {{ $q->patient->nama ?? '-' }}
                             </td>
@@ -178,24 +177,23 @@
                     <div class="min-h-[320px] p-4 text-slate-700">
                         @forelse ($latestInfo as $info)
                             @php
-                                $detailUrl = Route::has('infos.show') ? route('infos.show', $info->id) : '#';
+                                $detailUrl = Route::has('infos.show') ? route('infos.show', $info->id_informasi) : '#';
                             @endphp
 
                             <article class="flex gap-4 p-4">
                                 {{-- Gambar --}}
-                                @if ($info->cover)
-                                    <a href="{{ $detailUrl }}" class="block shrink-0">
-                                        <img src="{{ asset('storage/covers/' . $info->cover) }}"
-                                            alt="{{ $info->judul }}" loading="lazy" width="220" height="140"
-                                            class="w-[200px] h-[110px] object-cover rounded" />
-                                    </a>
-                                @else
-                                    <a href="{{ $detailUrl }}" class="block shrink-0">
+                                @php $coverUrl = $info->cover_url; @endphp
+                                <a href="{{ $detailUrl }}" class="block shrink-0">
+                                    @if ($coverUrl)
+                                        <img src="{{ $coverUrl }}"
+                                             alt="{{ $info->judul }}" loading="lazy" width="220" height="140"
+                                             class="w-[200px] h-[110px] object-cover rounded" />
+                                    @else
                                         <div class="w-[200px] h-[110px] rounded bg-slate-200 grid place-items-center text-slate-500 text-sm">
-                                            No Image
+                                            Tidak ada gambar
                                         </div>
-                                    </a>
-                                @endif
+                                    @endif
+                                </a>
 
                                 {{-- Teks --}}
                                 <div class="min-w-0">

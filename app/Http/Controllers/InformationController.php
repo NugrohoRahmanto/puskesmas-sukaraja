@@ -10,15 +10,24 @@ use Illuminate\Support\Facades\Storage;
 
 class InformationController extends Controller
 {
-    public function indexAdmin()
+    public function indexAdmin(Request $request)
     {
         if (Auth::check() && Auth::user()->role != 'admin') {
             return redirect()->route('dashboard')
                 ->withErrors('You are not authorized to access this page');
         }
 
-        $infos = Information::all();
-        return view('admin.informations.index', compact('infos'));
+        $pagination = $this->resolvePerPage($request);
+        $perPage = $pagination['perPage'];
+        $perPageOptions = $pagination['options'];
+
+        $query = Information::orderBy('created_at', 'desc');
+
+        $infos = $perPage === 'all'
+            ? $query->get()
+            : $query->paginate($perPage)->appends($request->except('page'));
+
+        return view('admin.informations.index', compact('infos', 'perPage', 'perPageOptions'));
     }
 
     public function createAdmin()
@@ -127,5 +136,12 @@ class InformationController extends Controller
 
         return redirect()->route('admin.informations.indexAdmin')
             ->with('success', 'Informasi berhasil dihapus.');
+    }
+
+    public function show(Information $information)
+    {
+        return view('informations.show', [
+            'info' => $information,
+        ]);
     }
 }

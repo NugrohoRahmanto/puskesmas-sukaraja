@@ -56,6 +56,7 @@
             <th class="px-4 py-3 font-medium text-left">No Antrian</th>
             <th class="px-4 py-3 font-medium text-left">NIK</th>
             <th class="px-4 py-3 font-medium text-left">Nama</th>
+            <th class="px-4 py-3 font-medium text-left">Gender</th>
             <th class="px-4 py-3 font-medium text-left">Pernah Berobat</th>
             <th class="px-4 py-3 font-medium text-left">Dibuat</th>
             <th class="px-4 py-3 font-medium text-left">Aksi</th>
@@ -67,6 +68,7 @@
               <td class="px-4 py-3">{{ $p->no_antrian }}</td>
               <td class="px-4 py-3 font-medium text-slate-800">{{ $p->nik }}</td>
               <td class="px-4 py-3">{{ $p->nama }}</td>
+              <td class="px-4 py-3 text-slate-600">{{ $p->gender ?? '—' }}</td>
               <td class="px-4 py-3">
                 @if($p->pernah_berobat === 'Ya')
                   <span class="inline-flex items-center rounded-full bg-emerald-600 text-white text-xs px-2.5 py-1">

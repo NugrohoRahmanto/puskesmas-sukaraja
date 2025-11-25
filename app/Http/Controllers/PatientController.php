@@ -88,6 +88,7 @@ class PatientController extends Controller
                 Rule::unique('patients', 'nik')->ignore($patient->id_pasien, 'id_pasien'),
             ],
             'nama' => ['required','string','max:255'],
+            'gender' => ['required','in:Laki-laki,Perempuan'],
             'pernah_berobat' => ['required','in:Ya,Tidak'],
         ], [
             'nik.regex' => 'NIK harus 16 digit angka.',
@@ -118,6 +119,7 @@ class PatientController extends Controller
         $validated = $request->validate([
             'nik'             => ['required','string','size:16','regex:/^[0-9]+$/','unique:patients,nik'],
             'nama'            => ['required','string','max:255'],
+            'gender'          => ['required','in:Laki-laki,Perempuan'],
             'pernah_berobat'  => ['required','in:Ya,Tidak'],
         ], [
             'nik.size'        => 'NIK harus 16 digit.',
@@ -125,13 +127,14 @@ class PatientController extends Controller
             'nik.unique'      => 'NIK sudah terdaftar.',
         ]);
 
-        $today = Carbon::today()->toDateString();
+        $today = Carbon::now('Asia/Jakarta')->toDateString();
 
         return DB::transaction(function () use ($validated, $today) {
             $patient = Patient::create([
                 'id_pengguna'    => Auth::id(),
                 'nik'            => $validated['nik'],
                 'nama'           => $validated['nama'],
+                'gender'         => $validated['gender'],
                 'pernah_berobat' => $validated['pernah_berobat'],
             ]);
 
@@ -152,14 +155,77 @@ class PatientController extends Controller
         });
     }
 
-    public function indexAdmin()
+    public function storeAdmin(Request $request)
+    {
+        if (Auth::check() && Auth::user()->role !== 'admin') {
+            return redirect()->route('dashboard')->withErrors('You are not authorized to access this page');
+        }
+
+        $validated = $request->validate([
+            'nik'             => ['required','string','size:16','regex:/^[0-9]+$/','unique:patients,nik'],
+            'nama'            => ['required','string','max:255'],
+            'gender'          => ['required','in:Laki-laki,Perempuan'],
+            'pernah_berobat'  => ['required','in:Ya,Tidak'],
+        ], [
+            'nik.size'        => 'NIK harus 16 digit.',
+            'nik.regex'       => 'NIK hanya boleh berisi angka.',
+            'nik.unique'      => 'NIK sudah terdaftar.',
+        ]);
+
+        $today = Carbon::now('Asia/Jakarta')->toDateString();
+
+        return DB::transaction(function () use ($validated, $today) {
+            $patient = Patient::create([
+                'id_pengguna'    => null,
+                'nik'            => $validated['nik'],
+                'nama'           => $validated['nama'],
+                'gender'         => $validated['gender'],
+                'pernah_berobat' => $validated['pernah_berobat'],
+            ]);
+
+            $maxQueue = Queue::whereDate('tanggal', $today)->max('no_antrian');
+            $maxHist  = PatientHistory::whereDate('tanggal', $today)->max('no_antrian');
+            $lastNumber = max($maxQueue ?? 0, $maxHist ?? 0);
+            $nextNumber = $lastNumber + 1;
+
+            Queue::create([
+                'id_pasien'  => $patient->id_pasien,
+                'no_antrian' => $nextNumber,
+                'tanggal'    => $today,
+            ]);
+
+            return redirect()
+                ->route('admin.patients.indexAdmin')
+                ->with('success', 'Pasien dan antrian berhasil ditambahkan.');
+        });
+    }
+
+    public function indexAdmin(Request $request)
     {
         if (Auth::check() && Auth::user()->role != 'admin') {
             return redirect()->route('dashboard')->withErrors('You are not authorized to access this page');
         }
 
-        $patients = Patient::orderBy('nik', 'asc')->get();
-        return view('admin.patients.index', compact('patients'));
+        $pagination = $this->resolvePerPage($request);
+        $perPage = $pagination['perPage'];
+        $perPageOptions = $pagination['options'];
+
+        $query = Patient::orderBy('nik', 'asc');
+
+        $patients = $perPage === 'all'
+            ? $query->get()
+            : $query->paginate($perPage)->appends($request->except('page'));
+
+        $perPageValue = (string) $perPage;
+        $queryParams = $request->except('per_page', 'page');
+
+        return view('admin.patients.index', compact(
+            'patients',
+            'perPage',
+            'perPageOptions',
+            'perPageValue',
+            'queryParams'
+        ));
     }
 
     public function editAdmin($id_pasien)
@@ -188,6 +254,7 @@ class PatientController extends Controller
                 Rule::unique('patients', 'nik')->ignore($patient->id_pasien, 'id_pasien'),
             ],
             'nama' => ['required', 'string', 'max:255'],
+            'gender' => ['required','in:Laki-laki,Perempuan'],
             'pernah_berobat' => ['required', 'in:Ya,Tidak'],
         ], [
             'nik.regex' => 'NIK harus 16 digit angka.',

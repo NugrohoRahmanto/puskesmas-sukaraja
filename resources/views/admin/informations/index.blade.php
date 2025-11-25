@@ -13,6 +13,12 @@
       </div>
     </div>
 
+    @php
+      $perPageValue = (string) ($perPage ?? 10);
+      $perPageOptionsList = $perPageOptions ?? [10,25,50,'all'];
+      $queryParams = request()->except('per_page','page');
+    @endphp
+
     {{-- FLASH --}}
     @if(session('success'))
       <div class="px-4 py-2 mb-4 text-sm rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-800">
@@ -26,11 +32,43 @@
     @endif
 
     {{-- TOOLBAR --}}
-    <div class="mb-4">
-      <a href="{{ route('admin.informations.createAdmin') }}"
-         class="inline-flex items-center gap-2 rounded-full bg-brand-700 hover:bg-brand-600 text-white px-4 py-2 text-sm">
-        <x-heroicon-o-plus class="w-5 h-5"/> Tambah Informasi
-      </a>
+    <div class="flex flex-col w-full gap-3 mb-4 md:flex-row md:items-center md:justify-between">
+      <div class="flex flex-wrap items-center gap-2">
+        <a href="{{ route('admin.informations.createAdmin') }}"
+           class="inline-flex items-center gap-2 rounded-full bg-brand-700 hover:bg-brand-600 text-white px-4 py-2 text-sm">
+          <x-heroicon-o-plus class="w-5 h-5"/> Tambah Informasi
+        </a>
+      </div>
+
+      <div class="md:ml-auto">
+        <form method="GET" action="{{ url()->current() }}"
+              class="flex items-center gap-2 text-sm text-slate-600">
+          @foreach($queryParams as $name => $value)
+            @if(is_array($value))
+              @foreach($value as $item)
+                <input type="hidden" name="{{ $name }}[]" value="{{ $item }}">
+              @endforeach
+            @else
+              <input type="hidden" name="{{ $name }}" value="{{ $value }}">
+            @endif
+          @endforeach
+          <span class="text-slate-500">Tampilkan</span>
+          <div class="relative">
+            <select name="per_page" onchange="this.form.submit()"
+                    class="rounded-full border border-slate-200 bg-white px-3 py-1.5 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-brand-200">
+              @foreach($perPageOptionsList as $option)
+                @php $label = $option === 'all' ? 'Semua' : $option; @endphp
+                <option value="{{ $option }}" {{ $perPageValue === (string) $option ? 'selected' : '' }}>
+                  {{ $label }} data
+                </option>
+              @endforeach
+            </select>
+            <span class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-slate-400">
+              <x-heroicon-o-chevron-down class="w-4 h-4" />
+            </span>
+          </div>
+        </form>
+      </div>
     </div>
 
     {{-- TABEL --}}
@@ -75,11 +113,12 @@
                 {{ \Illuminate\Support\Str::limit($info->isi ?? '', 80) ?: '—' }}
               </td>
               <td class="px-4 py-3">
-                @if($info->cover)
-                  <img src="{{ asset('storage/covers/' . $info->cover) }}" alt="{{ $info->judul }}"
+                @php $coverUrl = $info->cover_url; @endphp
+                @if($coverUrl)
+                  <img src="{{ $coverUrl }}" alt="{{ $info->judul }}"
                        class="w-16 h-12 rounded object-cover border border-slate-200">
                 @else
-                  —
+                  <span class="text-slate-400">—</span>
                 @endif
               </td>
               <td class="px-4 py-3">
