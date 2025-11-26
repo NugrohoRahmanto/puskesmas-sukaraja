@@ -92,6 +92,39 @@ class UserController extends Controller
         return view('admin.users.index', compact('users', 'perPage', 'perPageOptions'));
     }
 
+    public function createAdmin()
+    {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            return redirect()->route('dashboard')->withErrors('You are not authorized to access this page');
+        }
+
+        return view('admin.users.create');
+    }
+
+    public function storeAdmin(Request $request)
+    {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            return redirect()->route('dashboard')->withErrors('You are not authorized to access this page');
+        }
+
+        $validated = $request->validate([
+            'username' => ['required','string','max:50','alpha_dash','unique:users,username'],
+            'email'    => ['required','email','max:255','unique:users,email'],
+            'password' => ['required','string','min:8','confirmed'],
+        ]);
+
+        User::create([
+            'username'     => $validated['username'],
+            'email'        => $validated['email'],
+            'nama_lengkap' => $validated['username'],
+            'status'       => 'active',
+            'role'         => 'admin',
+            'password'     => Hash::make($validated['password']),
+        ]);
+
+        return redirect()->route('admin.users.indexAdmin')->with('success', 'Admin baru berhasil dibuat.');
+    }
+
     public function editAdmin($id_pengguna)
     {
         if (Auth::check() && Auth::user()->role !== 'admin') {
