@@ -95,7 +95,7 @@
                                 aria-describedby="{{ $errors->has('password') ? 'password-error' : '' }}"
                                 class="mt-1 block w-full rounded-xl border-line focus:border-brand-400 focus:ring-brand-300 text-sm pr-12" />
                             <button type="button"
-                                class="absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center justify-center p-2 rounded-lg text-slate-500 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-300"
+                                class="absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center justify-center p-2 rounded-lg text-slate-500 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
                                 aria-label="Tampilkan password" aria-controls="password" aria-pressed="false"
                                 title="Tampilkan password" data-toggle-password="#password">
                                 {{-- eye --}}
@@ -126,7 +126,7 @@
                                 autocomplete="off" minlength="8"
                                 class="mt-1 block w-full rounded-xl border-line focus:border-brand-400 focus:ring-brand-300 text-sm pr-12" />
                             <button type="button"
-                                class="absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center justify-center p-2 rounded-lg text-slate-500 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-300"
+                                class="absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center justify-center p-2 rounded-lg text-slate-500 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
                                 aria-label="Tampilkan konfirmasi password" aria-controls="password_confirmation"
                                 aria-pressed="false" title="Tampilkan konfirmasi password"
                                 data-toggle-password="#password_confirmation">

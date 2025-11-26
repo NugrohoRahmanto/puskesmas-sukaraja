@@ -7,8 +7,7 @@
 
     {{-- PILL HEADER --}}
     <div class="absolute -translate-x-1/2 -top-5 left-1/2">
-      <div class="px-6 py-2 text-base md:text-lg font-semibold text-center text-white
-                  rounded-full shadow border border-slate-200 bg-brand-700 whitespace-nowrap">
+      <div class="px-6 py-2 text-base font-semibold text-center text-white border rounded-full shadow md:text-lg border-slate-200 bg-brand-700 whitespace-nowrap">
         Manajemen Pengguna
       </div>
     </div>
@@ -21,12 +20,12 @@
 
     {{-- FLASH --}}
     @if(session('success'))
-      <div class="px-4 py-2 mb-4 text-sm rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-800">
+      <div class="px-4 py-2 mb-4 text-sm border rounded-lg border-emerald-200 bg-emerald-50 text-emerald-800">
         {{ session('success') }}
       </div>
     @endif
     @if ($errors->any())
-      <div class="px-4 py-2 mb-4 text-sm rounded-lg border border-red-200 bg-red-50 text-red-700">
+      <div class="px-4 py-2 mb-4 text-sm text-red-700 border border-red-200 rounded-lg bg-red-50">
         Terjadi kesalahan. Silakan coba lagi.
       </div>
     @endif
@@ -34,12 +33,13 @@
     {{-- TOOLBAR (opsional tambah & cari) --}}
     <div class="flex flex-col w-full gap-3 mb-4 md:flex-row md:items-center md:justify-between">
       <div class="flex flex-col gap-3 md:flex-row md:items-center md:flex-wrap md:gap-3">
-        @if (Route::has('admin.users.create'))
-          <a href="{{ route('admin.users.create') }}"
-             class="inline-flex items-center gap-2 rounded-full bg-brand-700 hover:bg-brand-600 text-white px-4 py-2 text-sm">
-            <x-heroicon-o-user-plus class="w-5 h-5"/> Tambah Pengguna
-          </a>
-        @endif
+        <div class="flex flex-wrap items-center gap-2">
+            <a href="{{ route('admin.users.createAdmin') }}"
+            class="inline-flex items-center gap-2 px-4 py-2 text-sm text-white rounded-full bg-brand-700 hover:bg-brand-600">
+            <x-heroicon-o-plus class="w-5 h-5"/> Tambah Admin
+            </a>
+        </div>
+     
 
         @if (Route::has('admin.users.search'))
           <form method="GET" action="{{ route('admin.users.search') }}" class="md:w-72">
@@ -80,7 +80,7 @@
                 </option>
               @endforeach
             </select>
-            <span class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-slate-400">
+            <span class="absolute inset-y-0 flex items-center pointer-events-none right-3 text-slate-400">
               <x-heroicon-o-chevron-down class="w-4 h-4" />
             </span>
           </div>
@@ -91,15 +91,15 @@
     {{-- TABEL --}}
     <div class="overflow-x-auto bg-white border rounded-2xl border-slate-200">
       <table class="min-w-full text-sm">
-        <thead class="bg-slate-50 text-slate-700 border-b border-slate-200">
+        <thead class="border-b bg-slate-50 text-slate-700 border-slate-200">
           <tr>
-            <th class="px-4 py-3 text-left font-medium">Nama Lengkap</th>
-            <th class="px-4 py-3 text-left font-medium">Username</th>
-            <th class="px-4 py-3 text-left font-medium">Email</th>
-            <th class="px-4 py-3 text-left font-medium">No Telepon</th>
-            <th class="px-4 py-3 text-left font-medium">Status</th>
-            <th class="px-4 py-3 text-left font-medium">Role</th>
-            <th class="px-4 py-3 text-left font-medium">Aksi</th>
+            <th class="px-4 py-3 font-medium text-left">Nama Lengkap</th>
+            <th class="px-4 py-3 font-medium text-left">Username</th>
+            <th class="px-4 py-3 font-medium text-left">Email</th>
+            <th class="px-4 py-3 font-medium text-left">No Telepon</th>
+            <th class="px-4 py-3 font-medium text-left">Status</th>
+            <th class="px-4 py-3 font-medium text-left">Role</th>
+            <th class="px-4 py-3 font-medium text-left">Aksi</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-200">
