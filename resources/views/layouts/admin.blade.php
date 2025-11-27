@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="id" class="h-full" x-data="{ open: false }">
+<html lang="id" class="h-full" x-data="{ mobileNav: false }">
 
 <head>
     <meta charset="utf-8">
@@ -10,7 +10,57 @@
 
 @stack('scripts')
 
-<body class="min-h-full bg-slate-50 text-slate-900 antialiased">
+<body class="min-h-full bg-slate-50 text-slate-900 antialiased" @keydown.window.escape="mobileNav = false">
+
+    {{-- Mobile header --}}
+    <header class="lg:hidden sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200">
+        <div class="flex items-center justify-between h-16 px-4">
+            <div class="flex items-center gap-3">
+                <button type="button" @click="mobileNav = true" class="p-2 text-slate-600 hover:text-brand-700"
+                    aria-label="Buka navigasi" aria-expanded="false">
+                    <x-heroicon-o-bars-3 class="w-6 h-6" />
+                </button>
+                <div class="flex items-center gap-3">
+                    <img src="{{ asset('images/logo.jpeg') }}" class="w-9 h-9 rounded-lg" alt="Logo Puskesmas">
+                    <span class="font-semibold">Admin Puskesmas</span>
+                </div>
+            </div>
+            <a href="{{ route('logout') }}" onclick="event.preventDefault(); this.nextElementSibling.submit();"
+                class="text-sm font-medium text-red-600">Logout</a>
+            <form action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
+        </div>
+    </header>
+
+    {{-- Mobile drawer --}}
+    <div x-cloak x-show="mobileNav" class="lg:hidden fixed inset-0 z-50" role="dialog" aria-modal="true">
+        <div class="absolute inset-0 bg-slate-900/60" @click="mobileNav = false"></div>
+        <div class="absolute inset-y-0 left-0 w-72 max-w-[80%] bg-white border-r border-slate-200 shadow-xl flex flex-col"
+            x-transition:enter="transition transform ease-out duration-200"
+            x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
+            x-transition:leave="transition transform ease-in duration-150"
+            x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full">
+            <div class="flex items-center justify-between h-16 px-4 border-b border-slate-200">
+                <div class="flex items-center gap-3">
+                    <img src="{{ asset('images/logo.jpeg') }}" class="w-9 h-9 rounded-lg" alt="Logo Puskesmas">
+                    <span class="font-semibold">Admin Puskesmas</span>
+                </div>
+                <button type="button" @click="mobileNav = false" class="p-2 text-slate-500 hover:text-slate-900"
+                    aria-label="Tutup navigasi">
+                    <x-heroicon-o-x-mark class="w-5 h-5" />
+                </button>
+            </div>
+            <div class="flex-1 flex flex-col overflow-y-auto">
+                @php
+                    $active = fn($pattern) => request()->routeIs($pattern)
+                        ? 'bg-brand-100 text-brand-700'
+                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900';
+
+                    $is = fn($pattern) => request()->routeIs($pattern);
+                @endphp
+                @include('layouts.partials.admin-nav')
+            </div>
+        </div>
+    </div>
 
     {{-- Sidebar desktop --}}
     <aside class="hidden lg:flex lg:flex-col lg:w-64 fixed inset-y-0 border-r border-slate-200 bg-white">
@@ -26,106 +76,7 @@
             $is = fn($pattern) => request()->routeIs($pattern);
         @endphp
 
-        <nav class="flex-1 p-3 space-y-1">
-            {{-- Beranda --}}
-            <a href="{{ route('admin.dashboard') }}"
-                class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ $active('admin.dashboard') }}"
-                aria-current="{{ $is('admin.dashboard') ? 'page' : 'false' }}">
-                @if ($is('admin.dashboard'))
-                    <x-heroicon-s-home class="w-5 h-5 shrink-0" aria-hidden="true" />
-                @else
-                    <x-heroicon-o-home class="w-5 h-5 shrink-0" aria-hidden="true" />
-                @endif
-                Beranda
-            </a>
-
-            {{-- Manajemen Pasien --}}
-            <a href="{{ route('admin.patients.indexAdmin') }}"
-                class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ $active('admin.patients.indexAdmin*') }}"
-                aria-current="{{ $is('admin.patients.indexAdmin*') ? 'page' : 'false' }}">
-                @if ($is('admin.patients.indexAdmin*'))
-                    <x-heroicon-s-user-group class="w-5 h-5 shrink-0" aria-hidden="true" />
-                @else
-                    <x-heroicon-o-user-group class="w-5 h-5 shrink-0" aria-hidden="true" />
-                @endif
-                Manajemen Pasien
-            </a>
-
-            {{-- Manajemen Antrian --}}
-            <a href="{{ route('admin.queues.indexAdmin') }}"
-                class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ $active('admin.queues.indexAdmin') }}"
-                aria-current="{{ $is('admin.queues.indexAdmin') ? 'page' : 'false' }}">
-                @if ($is('admin.queues.indexAdmin'))
-                    <x-heroicon-s-queue-list class="w-5 h-5 shrink-0" aria-hidden="true" />
-                @else
-                    <x-heroicon-o-queue-list class="w-5 h-5 shrink-0" aria-hidden="true" />
-                @endif
-                Manajemen Antrian
-            </a>
-
-            {{-- Riwayat Pasien --}}
-            <a href="{{ route('admin.patientsHistory.indexAdmin') }}"
-                class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ $active('admin.patientsHistory.indexAdmin*') }}"
-                aria-current="{{ $is('admin.patientsHistory.indexAdmin*') ? 'page' : 'false' }}">
-                @if ($is('admin.patientsHistory.indexAdmin*'))
-                    <x-heroicon-s-clipboard-document-list class="w-5 h-5 shrink-0" aria-hidden="true" />
-                @else
-                    <x-heroicon-o-clipboard-document-list class="w-5 h-5 shrink-0" aria-hidden="true" />
-                @endif
-                Riwayat Pasien
-            </a>
-
-            {{-- Manajemen Informasi --}}
-            <a href="{{ route('admin.informations.indexAdmin') }}"
-                class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ $active('admin.informations.indexAdmin*') }}"
-                aria-current="{{ $is('admin.informations.indexAdmin*') ? 'page' : 'false' }}">
-                @if ($is('admin.informations.indexAdmin*'))
-                    <x-heroicon-s-megaphone class="w-5 h-5 shrink-0" aria-hidden="true" />
-                @else
-                    <x-heroicon-o-megaphone class="w-5 h-5 shrink-0" aria-hidden="true" />
-                @endif
-                Manajemen Informasi
-            </a>
-
-            {{-- Manajemen Saran & Masukan --}}
-            <a href="{{ route('admin.suggestions.indexAdmin') }}"
-                class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ $active('admin.suggestions.indexAdmin') }}"
-                aria-current="{{ $is('admin.suggestions.indexAdmin') ? 'page' : 'false' }}">
-                @if ($is('admin.suggestions.indexAdmin'))
-                    <x-heroicon-s-chat-bubble-left-right class="w-5 h-5 shrink-0" aria-hidden="true" />
-                @else
-                    <x-heroicon-o-chat-bubble-left-right class="w-5 h-5 shrink-0" aria-hidden="true" />
-                @endif
-                Manajemen Saran dan Masukan
-            </a>
-
-            {{-- Manajemen Pengguna --}}
-            <a href="{{ route('admin.users.indexAdmin') }}"
-                class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ $active('admin.users.indexAdmin') }}"
-                aria-current="{{ $is('admin.users.indexAdmin') ? 'page' : 'false' }}">
-                @if ($is('admin.users.indexAdmin'))
-                    <x-heroicon-s-users class="w-5 h-5 shrink-0" aria-hidden="true" />
-                @else
-                    <x-heroicon-o-users class="w-5 h-5 shrink-0" aria-hidden="true" />
-                @endif
-                Manajemen Pengguna
-            </a>
-
-            {{-- Logout --}}
-            <form action="{{ route('logout') }}" method="POST" class="pt-1">
-                @csrf
-                <button type="submit"
-                    class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-red-600 hover:text-white">
-                    <x-heroicon-o-arrow-left-on-rectangle class="w-5 h-5 shrink-0" aria-hidden="true" />
-                    Logout
-                </button>
-            </form>
-        </nav>
-
-        <div class="p-3 border-t border-slate-200">
-            <p class="text-xs font-medium text-slate-600">Copyright Hisyam</p>
-            <p class="text-xs text-slate-600">mohammad.121140131@student.itera.ac.id</p>
-        </div>
+        @include('layouts.partials.admin-nav')
     </aside>
 
     {{-- Main --}}
