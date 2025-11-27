@@ -52,7 +52,7 @@
         </div>
     </header>
 
-    <main class="{{ View::hasSection('fullbleed') ? '' : 'max-w-full mx-auto px-4 md:px-6 py-6' }}">
+    <main class="{{ View::hasSection('fullbleed') ? '' : 'max-w-full mx-auto px-4 md:px-6 py-6' }} w-full overflow-x-hidden">
         @yield('content')
     </main>
 

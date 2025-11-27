@@ -88,8 +88,8 @@
       </div>
     </div>
 
-    {{-- TABEL --}}
-    <div class="overflow-x-auto bg-white border rounded-2xl border-slate-200">
+    {{-- Tabel desktop --}}
+    <div class="hidden md:block overflow-x-auto bg-white border rounded-2xl border-slate-200">
       <table class="min-w-full text-sm">
         <thead class="border-b bg-slate-50 text-slate-700 border-slate-200">
           <tr>
@@ -143,6 +143,42 @@
           @endforelse
         </tbody>
       </table>
+    </div>
+
+    {{-- Kartu mobile --}}
+    <div class="space-y-3 md:hidden">
+      @forelse ($users as $u)
+        @php $active = ($u->status ?? '') === 'active'; @endphp
+        <article class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+          <p class="text-sm font-semibold text-slate-900">{{ $u->nama_lengkap ?? '—' }}</p>
+          <p class="text-xs text-slate-500">{{ $u->email ?? '—' }}</p>
+          <div class="mt-2 space-y-1 text-sm text-slate-600">
+            <p>Username: {{ $u->username ?? '—' }}</p>
+            <p>No. Telepon: {{ $u->no_tel ?? '—' }}</p>
+          </div>
+          <div class="mt-2 flex flex-wrap gap-2 text-xs">
+            <span class="inline-flex items-center rounded-full {{ $active ? 'bg-emerald-600' : 'bg-slate-600' }} text-white px-3 py-1">{{ ucfirst($u->status ?? 'unknown') }}</span>
+            <span class="inline-flex items-center rounded-full bg-slate-200 text-slate-700 px-3 py-1">Role: {{ $u->role ?? '—' }}</span>
+          </div>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <a href="{{ route('admin.users.editAdmin', $u->id_pengguna) }}"
+               class="flex-1 min-w-[140px] inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 px-3 py-1.5 text-sm hover:bg-slate-100">
+              <x-heroicon-o-pencil-square class="w-4 h-4"/> Edit
+            </a>
+            <form action="{{ route('admin.users.destroyAdmin', $u->id_pengguna) }}" method="POST"
+                  class="flex-1 min-w-[140px]"
+                  onsubmit="return confirm('Yakin ingin menghapus pengguna ini?');">
+              @csrf @method('DELETE')
+              <button type="submit"
+                      class="w-full inline-flex items-center justify-center gap-2 rounded-full bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 text-sm">
+                <x-heroicon-o-trash class="w-4 h-4"/> Hapus
+              </button>
+            </form>
+          </div>
+        </article>
+      @empty
+        <p class="text-center text-slate-500">Belum ada pengguna.</p>
+      @endforelse
     </div>
 
     {{-- PAGINATION (jika pakai paginate) --}}

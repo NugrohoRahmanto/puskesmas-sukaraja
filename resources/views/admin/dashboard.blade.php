@@ -71,7 +71,7 @@
           Tidak ada pasien dalam antrian hari ini.
         </div>
       @else
-        <div class="overflow-x-auto bg-white border border-slate-200 rounded-2xl">
+        <div class="hidden md:block overflow-x-auto bg-white border border-slate-200 rounded-2xl">
           <table class="min-w-full text-sm">
             <thead class="bg-slate-50 text-slate-700 border-b border-slate-200">
               <tr>
@@ -104,6 +104,31 @@
               @endforeach
             </tbody>
           </table>
+        </div>
+
+        <div class="space-y-3 md:hidden">
+          @foreach($queues as $q)
+            <article class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+              <div class="flex items-center justify-between text-xs text-slate-500">
+                <span>No. Antrian</span>
+                <span class="font-semibold text-slate-900">{{ $q->display_no ?? $loop->iteration }}</span>
+              </div>
+              <div class="mt-3 space-y-1 text-sm text-slate-700">
+                <p class="font-semibold">{{ $q->patient->nama_lengkap ?? $q->patient->nama ?? '—' }}</p>
+                <p>NIK: {{ $q->patient->nik ?? '—' }}</p>
+                <p class="text-xs text-slate-500">DB: {{ $q->no_antrian ?? '—' }}</p>
+              </div>
+              <form action="{{ route('admin.call', $q->id_antrian ?? $q->id) }}" method="POST"
+                    class="mt-4"
+                    onsubmit="return confirm('Yakin ingin memanggil pasien ini?');">
+                @csrf
+                <button type="submit"
+                        class="w-full inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-2 text-sm">
+                  <x-heroicon-o-phone class="w-4 h-4"/> Panggil Pasien
+                </button>
+              </form>
+            </article>
+          @endforeach
         </div>
       @endif
     </section>

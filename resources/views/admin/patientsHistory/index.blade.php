@@ -106,8 +106,8 @@
     </div>
 
 
-    {{-- Tabel --}}
-    <div class="overflow-x-auto bg-white border rounded-2xl border-slate-200">
+    {{-- Tabel desktop --}}
+    <div class="hidden md:block overflow-x-auto bg-white border rounded-2xl border-slate-200">
       <table class="min-w-full text-sm">
         <thead class="border-b bg-slate-50 text-slate-700 border-slate-200">
           <tr>
@@ -181,6 +181,49 @@
           @endforelse
         </tbody>
       </table>
+    </div>
+
+    {{-- Kartu mobile --}}
+    <div class="space-y-3 md:hidden">
+      @forelse ($histories as $history)
+        @php
+          $isYes = ($history->pernah_berobat === 'Ya' || $history->pernah_berobat === true);
+          $tgl = $history->tanggal ? \Carbon\Carbon::parse($history->tanggal)->translatedFormat('d M Y') : '-';
+        @endphp
+        <article class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+          <div class="flex items-center justify-between text-xs text-slate-500">
+            <span>No. Antrian</span>
+            <span class="font-semibold text-slate-900">{{ $history->no_antrian ?? '—' }}</span>
+          </div>
+          <div class="mt-3 space-y-1 text-sm">
+            <p class="font-semibold text-slate-900">{{ $history->nama ?? '—' }}</p>
+            <p class="text-slate-600">NIK: {{ $history->nik ?? '—' }}</p>
+            <p class="text-slate-600">Gender: {{ $history->gender ?? '—' }}</p>
+            <p class="text-slate-600">Pernah berobat: <span class="font-medium">{{ $isYes ? 'Ya' : 'Tidak' }}</span></p>
+            <p class="text-xs text-slate-500">Tanggal: {{ $tgl }}</p>
+          </div>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <a href="{{ route('admin.patientsHistory.editAdmin', $history->id_history) }}"
+               class="flex-1 min-w-[140px] inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 px-3 py-1.5 text-sm hover:bg-slate-100">
+              <x-heroicon-o-pencil-square class="w-4 h-4"/> Edit
+            </a>
+            <form action="{{ route('admin.patientsHistory.destroyAdmin', $history->id_history) }}"
+                  method="POST" class="flex-1 min-w-[140px]"
+                  onsubmit="return confirm('Yakin ingin menghapus?');">
+              @csrf
+              @method('DELETE')
+              <button type="submit"
+                      class="w-full inline-flex items-center justify-center gap-2 rounded-full bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 text-sm">
+                <x-heroicon-o-trash class="w-4 h-4"/> Hapus
+              </button>
+            </form>
+          </div>
+        </article>
+      @empty
+        <p class="text-center text-slate-500">
+          {{ $hasFilter ? 'Tidak ada data pada rentang tanggal tersebut.' : 'Belum ada data riwayat.' }}
+        </p>
+      @endforelse
     </div>
 
     {{-- Pagination --}}

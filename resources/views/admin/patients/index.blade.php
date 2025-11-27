@@ -33,9 +33,9 @@
         </button>
       </div>
 
-      <div class="md:ml-auto">
+      <div class="md:ml-auto w-full md:w-auto">
         <form method="GET" action="{{ url()->current() }}"
-              class="flex items-center gap-2 text-sm text-slate-600">
+              class="flex items-center gap-2 text-sm text-slate-600 w-full">
           @foreach($queryParams as $name => $value)
             @if(is_array($value))
               @foreach($value as $item)
@@ -63,8 +63,8 @@
       </div>
     </div>
 
-    {{-- TABEL --}}
-    <div class="overflow-x-auto bg-white border rounded-2xl border-slate-200">
+    {{-- Tabel desktop --}}
+    <div class="hidden md:block overflow-x-auto bg-white border rounded-2xl border-slate-200">
       <table class="min-w-full text-sm">
         <thead class="border-b bg-slate-50 text-slate-700 border-slate-200">
           <tr>
@@ -112,13 +112,48 @@
             </tr>
           @empty
             <tr>
-              <td colspan="4" class="px-4 py-8 text-center text-slate-500">
+              <td colspan="5" class="px-4 py-8 text-center text-slate-500">
                 Belum ada data pasien.
               </td>
             </tr>
           @endforelse
         </tbody>
       </table>
+    </div>
+
+    {{-- Kartu mobile --}}
+    <div class="space-y-3 md:hidden">
+      @forelse ($patients as $patient)
+        <article class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+          <div class="flex items-center justify-between text-xs text-slate-500">
+            <span>NIK</span>
+            <span class="font-semibold text-slate-900">{{ $patient->nik ?? '—' }}</span>
+          </div>
+          <div class="mt-3 space-y-1 text-sm">
+            <p class="font-semibold text-slate-900">{{ $patient->nama ?? $patient->nama_lengkap ?? '—' }}</p>
+            <p class="text-slate-600">Gender: {{ $patient->gender ?? '—' }}</p>
+            <p class="text-slate-600">Pernah berobat: <span class="font-medium">{{ ($patient->pernah_berobat ?? null) === 'Ya' ? 'Ya' : 'Tidak' }}</span></p>
+          </div>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <a href="{{ route('admin.patients.editAdmin', $patient->id_pasien) }}"
+               class="flex-1 min-w-[140px] inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 px-3 py-1.5 text-sm hover:bg-slate-100">
+              <x-heroicon-o-pencil-square class="w-4 h-4"/> Edit
+            </a>
+            <form action="{{ route('admin.patients.destroyAdmin', $patient->id_pasien) }}" method="POST"
+                  class="flex-1 min-w-[140px]"
+                  onsubmit="return confirm('Yakin ingin menghapus?');">
+              @csrf
+              @method('DELETE')
+              <button type="submit"
+                      class="w-full inline-flex items-center justify-center gap-2 rounded-full bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 text-sm">
+                <x-heroicon-o-trash class="w-4 h-4"/> Hapus
+              </button>
+            </form>
+          </div>
+        </article>
+      @empty
+        <p class="text-center text-slate-500">Belum ada data pasien.</p>
+      @endforelse
     </div>
 
     {{-- PAGINATION (jika pakai paginate) --}}
