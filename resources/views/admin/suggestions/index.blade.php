@@ -81,8 +81,8 @@
       </div>
     </div>
 
-    {{-- TABEL --}}
-    <div class="overflow-x-auto bg-white border rounded-2xl border-slate-200">
+    {{-- Tabel desktop --}}
+    <div class="hidden md:block overflow-x-auto bg-white border rounded-2xl border-slate-200">
       <table class="min-w-full text-sm">
         <thead class="bg-slate-50 text-slate-700 border-b border-slate-200">
           <tr>
@@ -136,6 +136,38 @@
           @endforelse
         </tbody>
       </table>
+    </div>
+
+    {{-- Kartu mobile --}}
+    <div class="space-y-3 md:hidden">
+      @forelse($suggestions as $index => $s)
+        <article class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+          <div class="text-xs text-slate-500">Pengguna</div>
+          <p class="mt-1 text-sm font-semibold text-slate-900">{{ $s->user->nama_lengkap ?? '—' }}</p>
+          @if($s->user?->email)
+            <p class="text-xs text-slate-500">{{ $s->user->email }}</p>
+          @endif
+          <p class="mt-3 text-sm text-slate-700">{{ \Illuminate\Support\Str::limit($s->keterangan ?? '—', 200) }}</p>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <a href="{{ route('admin.suggestions.editAdmin', $s->id_saran) }}"
+               class="flex-1 min-w-[140px] inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 px-3 py-1.5 text-sm hover:bg-slate-100">
+              <x-heroicon-o-pencil-square class="w-4 h-4"/> Edit
+            </a>
+            <form action="{{ route('admin.suggestions.destroyAdmin', $s->id_saran) }}" method="POST"
+                  class="flex-1 min-w-[140px]"
+                  onsubmit="return confirm('Yakin ingin menghapus saran ini?');">
+              @csrf
+              @method('DELETE')
+              <button type="submit"
+                      class="w-full inline-flex items-center justify-center gap-2 rounded-full bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 text-sm">
+                <x-heroicon-o-trash class="w-4 h-4"/> Hapus
+              </button>
+            </form>
+          </div>
+        </article>
+      @empty
+        <p class="text-center text-slate-500">Belum ada saran.</p>
+      @endforelse
     </div>
 
     {{-- PAGINATION --}}

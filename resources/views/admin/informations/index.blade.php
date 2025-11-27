@@ -71,8 +71,8 @@
       </div>
     </div>
 
-    {{-- TABEL --}}
-    <div class="overflow-x-auto bg-white border rounded-2xl border-slate-200">
+    {{-- Tabel desktop --}}
+    <div class="hidden md:block overflow-x-auto bg-white border rounded-2xl border-slate-200">
       <table class="min-w-full text-sm">
         <thead class="bg-slate-50 text-slate-700 border-b border-slate-200">
           <tr>
@@ -147,6 +147,54 @@
           @endforelse
         </tbody>
       </table>
+    </div>
+
+    {{-- Kartu mobile --}}
+    <div class="space-y-3 md:hidden">
+      @forelse($infos as $index => $info)
+        @php
+          $jenis = \Illuminate\Support\Str::of($info->jenis ?? '')->lower();
+          $chip = 'bg-slate-600 text-white';
+          if ($jenis->contains('pengumuman')) $chip = 'bg-sky-600 text-white';
+          elseif ($jenis->contains('artikel')) $chip = 'bg-emerald-600 text-white';
+          elseif ($jenis->contains('kegiatan')) $chip = 'bg-amber-600 text-white';
+          $coverUrl = $info->cover_url;
+        @endphp
+        <article class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+          <div class="flex items-center justify-between text-xs text-slate-500">
+            <span>{{ $info->jenis ?? 'Informasi' }}</span>
+            @if($info->jenis)
+              <span class="inline-flex items-center rounded-full {{ $chip }} px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide">
+                {{ $info->jenis }}
+              </span>
+            @endif
+          </div>
+          <h3 class="mt-3 text-base font-semibold text-slate-900">{{ $info->judul ?? 'Tanpa judul' }}</h3>
+          <p class="mt-2 text-sm text-slate-600">{{ \Illuminate\Support\Str::limit($info->isi ?? '—', 140) }}</p>
+          @if($coverUrl)
+            <img src="{{ $coverUrl }}" alt="{{ $info->judul }}"
+                 class="mt-3 w-full h-40 object-cover rounded-xl border border-slate-200" />
+          @endif
+          <div class="mt-4 flex flex-wrap gap-2">
+            <a href="{{ route('admin.informations.editAdmin', $info->id_informasi) }}"
+               class="flex-1 min-w-[140px] inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 px-3 py-1.5 text-sm hover:bg-slate-100">
+              <x-heroicon-o-pencil-square class="w-4 h-4"/> Edit
+            </a>
+            <form action="{{ route('admin.informations.destroyAdmin', $info->id_informasi) }}" method="POST"
+                  class="flex-1 min-w-[140px]"
+                  onsubmit="return confirm('Yakin ingin menghapus informasi ini?');">
+              @csrf
+              @method('DELETE')
+              <button type="submit"
+                      class="w-full inline-flex items-center justify-center gap-2 rounded-full bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 text-sm">
+                <x-heroicon-o-trash class="w-4 h-4"/> Hapus
+              </button>
+            </form>
+          </div>
+        </article>
+      @empty
+        <p class="text-center text-slate-500">Belum ada informasi.</p>
+      @endforelse
     </div>
 
     {{-- PAGINATION --}}

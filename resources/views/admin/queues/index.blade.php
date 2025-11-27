@@ -68,7 +68,7 @@
         Tidak ada antrian saat ini.
       </div>
     @else
-      <div class="overflow-x-auto bg-white border rounded-2xl border-slate-200">
+      <div class="hidden md:block overflow-x-auto bg-white border rounded-2xl border-slate-200">
         <table class="min-w-full text-sm">
           <thead class="border-b bg-slate-50 text-slate-700 border-slate-200">
             <tr>
@@ -134,6 +134,50 @@
             @endforeach
           </tbody>
         </table>
+      </div>
+
+      <div class="space-y-3 md:hidden">
+        @foreach($queues as $q)
+          @php
+            $pb = $q->patient->pernah_berobat ?? null;
+            $nama = $q->patient->nama ?? $q->patient->nama_lengkap ?? '—';
+            $nik  = $q->patient->nik ?? '—';
+          @endphp
+          <article class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+            <div class="flex items-center justify-between text-xs text-slate-500">
+              <span>No. Antrian</span>
+              <span class="font-semibold text-slate-900">{{ $q->display_no ?? $loop->iteration }}</span>
+            </div>
+            <div class="mt-3 space-y-1 text-sm">
+              <p class="font-semibold text-slate-900">{{ $nama }}</p>
+              <p class="text-slate-600">NIK: {{ $nik }}</p>
+              <p class="text-slate-600">Pernah berobat: <span class="font-medium">{{ ($pb === 'Ya' || $pb === true) ? 'Ya' : 'Tidak' }}</span></p>
+            </div>
+            <div class="mt-4 grid gap-2">
+              <a href="{{ route('admin.queues.editAdmin', $q->id_antrian ?? $q->id) }}"
+                 class="w-full inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 px-3 py-1.5 text-sm hover:bg-slate-100">
+                <x-heroicon-o-pencil-square class="w-4 h-4"/> Edit
+              </a>
+              <form action="{{ route('admin.queues.destroyAdmin', $q->id_antrian ?? $q->id) }}" method="POST"
+                    onsubmit="return confirm('Hapus antrian ini?')">
+                @csrf
+                @method('DELETE')
+                <button type="submit"
+                        class="w-full inline-flex items-center justify-center gap-2 rounded-full bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 text-sm">
+                  <x-heroicon-o-trash class="w-4 h-4"/> Hapus
+                </button>
+              </form>
+              <form action="{{ route('admin.queues.callAdmin', $q->id_antrian ?? $q->id) }}" method="POST"
+                    onsubmit="return confirm('Panggil pasien ini?')">
+                @csrf
+                <button type="submit"
+                        class="w-full inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 text-sm">
+                  <x-heroicon-o-phone class="w-4 h-4"/> Panggil
+                </button>
+              </form>
+            </div>
+          </article>
+        @endforeach
       </div>
 
       {{-- PAGINATION (jika menggunakan paginate di controller) --}}

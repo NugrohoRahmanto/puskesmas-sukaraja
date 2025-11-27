@@ -81,7 +81,7 @@
 
     {{-- Main --}}
     <div class="lg:pl-64">
-        <main class="px-4 md:px-6 py-6">
+        <main class="px-4 md:px-6 py-6 w-full overflow-x-hidden">
             @yield('content')
         </main>
     </div>

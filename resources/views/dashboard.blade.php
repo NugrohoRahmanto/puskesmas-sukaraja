@@ -219,9 +219,9 @@
                         @endforelse
                     </div>
 
-                    <div class="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 w-full
+                    <div class="absolute inset-x-4 bottom-0 translate-y-1/2 max-w-2xl mx-auto w-auto
                         px-5 py-1.5 bg-brand-700 border border-slate-200 rounded-full
-                        text-xs sm:text-sm tracking-wide text-white shadow-sm text-center z-10 mx-2">
+                        text-xs sm:text-sm tracking-wide text-white shadow-sm text-center z-10">
                         Informasi Kontak Puskesmas • WA: 0812-3456-7890
                     </div>
                 </div>

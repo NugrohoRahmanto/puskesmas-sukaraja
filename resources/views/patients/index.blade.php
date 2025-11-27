@@ -33,10 +33,10 @@
       </a>
 
       {{-- (Opsional) Pencarian cepat --}}
-      <form method="GET" action="{{ route('patients.search') }}" class="ml-auto">
+      <form method="GET" action="{{ route('patients.search') }}" class="ml-auto w-full sm:w-auto">
         <div class="relative">
             <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari NIK / Nama"
-                class="w-64 rounded-full bg-white border border-slate-200 px-4 py-2.5 pr-10
+                class="w-full sm:w-64 rounded-full bg-white border border-slate-200 px-4 py-2.5 pr-10
                         focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-brand-400
                         placeholder:text-slate-400 text-sm" />
 
@@ -48,8 +48,8 @@
     </form>
     </div>
 
-    {{-- Tabel --}}
-    <div class="overflow-x-auto bg-white border rounded-2xl border-slate-200">
+    {{-- Tabel desktop --}}
+    <div class="hidden md:block overflow-x-auto bg-white border rounded-2xl border-slate-200">
       <table class="min-w-full text-sm">
         <thead class="border-b bg-slate-50 border-slate-200 text-slate-700">
           <tr>
@@ -121,14 +121,63 @@
             </tr>
           @empty
             <tr>
-              <td colspan="6" class="px-4 py-8 text-center text-slate-500">
+              <td colspan="7" class="px-4 py-8 text-center text-slate-500">
                 Belum ada data pasien.
               </td>
             </tr>
           @endforelse
         </tbody>
-      </table>
-    </div>
+        </table>
+      </div>
+
+      {{-- Kartu mobile --}}
+      <div class="space-y-3 md:hidden">
+        @forelse ($patients as $p)
+          <article class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+            <div class="flex items-center justify-between text-xs text-slate-500">
+              <span>No. Antrian</span>
+              <span class="font-semibold text-slate-900">{{ $p->no_antrian ?? '-' }}</span>
+            </div>
+            <div class="mt-3 space-y-1 text-sm">
+              <p class="font-semibold text-slate-900">{{ $p->nama }}</p>
+              <p class="text-slate-600">NIK: {{ $p->nik }}</p>
+              <p class="text-slate-600">Gender: {{ $p->gender ?? '—' }}</p>
+              <p class="text-slate-600">Pernah berobat: <span class="font-medium">{{ $p->pernah_berobat ?? 'Tidak' }}</span></p>
+              <p class="text-slate-500 text-xs">Dibuat {{ optional($p->created_at)->translatedFormat('d M Y, H:i') }}</p>
+            </div>
+            <div class="mt-4 flex flex-wrap gap-2">
+              <a href="{{ route('patients.edit', $p->id_pasien) }}"
+                class="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-slate-300 px-3 py-1.5 text-sm hover:bg-slate-100 min-w-[140px]">
+                <x-heroicon-o-pencil-square class="w-4 h-4"/>
+                Edit
+              </a>
+              <form action="{{ route('patients.destroy', $p->id_pasien) }}" method="POST" class="flex-1 min-w-[140px]"
+                onsubmit="return confirm('Yakin hapus pasien ini?')">
+                @csrf
+                @method('DELETE')
+                <button type="submit"
+                    class="w-full inline-flex items-center justify-center gap-2 rounded-full bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 text-sm">
+                  <x-heroicon-o-trash class="w-4 h-4"/>
+                  Hapus
+                </button>
+              </form>
+              @if($p->id_antrian)
+                <button type="button"
+                    data-queue-id="{{ $p->id_antrian }}"
+                    data-no="{{ $p->no_antrian }}"
+                    data-nama="{{ $p->nama }}"
+                    onclick="cetakAntrian(this)"
+                    class="w-full inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 text-sm">
+                  <x-heroicon-o-printer class="w-4 h-4"/>
+                  Cetak
+                </button>
+              @endif
+            </div>
+          </article>
+        @empty
+          <p class="text-center text-slate-500">Belum ada data pasien.</p>
+        @endforelse
+      </div>
 
     {{-- Pagination (jika pakai paginate di controller) --}}
     @if ($patients instanceof \Illuminate\Pagination\AbstractPaginator)
