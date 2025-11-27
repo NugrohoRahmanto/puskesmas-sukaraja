@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('nama_lengkap');
             $table->string('no_tel')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
-            $table->enum('role', ['admin', 'user'])->default('user'); 
+            $table->enum('role', ['admin', 'user'])->default('user');
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

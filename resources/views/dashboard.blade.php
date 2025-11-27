@@ -25,7 +25,8 @@
                     @else
                     {{-- Area scroll --}}
                     <div class="h-[420px] overflow-y-auto rounded-b-[22px]">
-                        <table class="min-w-full text-sm border border-separate border-slate-200 border-spacing-0">
+                        <div class="min-w-full overflow-x-auto">
+                        <table class="w-full text-sm border border-separate border-slate-200 border-spacing-0">
                         {{-- Sticky header tabel --}}
                         <thead class="sticky top-0 z-10">
                             <tr class="bg-white">
@@ -45,6 +46,7 @@
                             @endforeach
                         </tbody>
                         </table>
+                        </div>
                     </div>
                     @endif
                 </div>
@@ -65,16 +67,16 @@
                                 $detailUrl = Route::has('infos.show') ? route('infos.show', $info->id_informasi) : '#';
                             @endphp
 
-                            <article class="flex gap-4 p-4 bg-white border rounded-lg border-slate-200">
+                            <article class="flex flex-col gap-4 p-4 bg-white border rounded-lg border-slate-200 sm:flex-row">
                                 {{-- Gambar --}}
                                 @php $coverUrl = $info->cover_url; @endphp
                                 <a href="{{ $detailUrl }}" class="block shrink-0">
                                     @if ($coverUrl)
                                         <img src="{{ $coverUrl }}" alt="{{ $info->judul }}"
                                              loading="lazy" width="220" height="140"
-                                             class="w-[200px] h-[110px] object-cover rounded" />
+                                             class="w-full h-48 object-cover rounded sm:w-[200px] sm:h-[110px]" />
                                     @else
-                                        <div class="w-[200px] h-[110px] rounded bg-slate-200 grid place-items-center text-slate-500 text-sm">
+                                        <div class="w-full h-48 rounded bg-slate-200 grid place-items-center text-slate-500 text-sm sm:w-[200px] sm:h-[110px]">
                                             Tidak ada gambar
                                         </div>
                                     @endif
@@ -139,7 +141,8 @@
                 @else
                 {{-- Area scroll --}}
                 <div class="h-[420px] overflow-y-auto rounded-b-[22px]">
-                    <table class="min-w-full text-sm border border-separate border-slate-200 border-spacing-0">
+                        <div class="min-w-full overflow-x-auto">
+                        <table class="w-full text-sm border border-separate border-slate-200 border-spacing-0">
                     {{-- Sticky header tabel --}}
                     <thead class="sticky top-0 z-10">
                         <tr class="bg-white">
@@ -158,7 +161,8 @@
                         </tr>
                         @endforeach
                     </tbody>
-                    </table>
+                        </table>
+                        </div>
                 </div>
                 @endif
             </div>
@@ -180,16 +184,16 @@
                                 $detailUrl = Route::has('infos.show') ? route('infos.show', $info->id_informasi) : '#';
                             @endphp
 
-                            <article class="flex gap-4 p-4">
+                            <article class="flex flex-col gap-4 p-4 sm:flex-row">
                                 {{-- Gambar --}}
                                 @php $coverUrl = $info->cover_url; @endphp
                                 <a href="{{ $detailUrl }}" class="block shrink-0">
                                     @if ($coverUrl)
                                         <img src="{{ $coverUrl }}"
                                              alt="{{ $info->judul }}" loading="lazy" width="220" height="140"
-                                             class="w-[200px] h-[110px] object-cover rounded" />
+                                             class="w-full h-48 object-cover rounded sm:w-[200px] sm:h-[110px]" />
                                     @else
-                                        <div class="w-[200px] h-[110px] rounded bg-slate-200 grid place-items-center text-slate-500 text-sm">
+                                        <div class="w-full h-48 rounded bg-slate-200 grid place-items-center text-slate-500 text-sm sm:w-[200px] sm:h-[110px]">
                                             Tidak ada gambar
                                         </div>
                                     @endif
