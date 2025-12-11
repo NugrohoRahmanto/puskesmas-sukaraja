@@ -13,7 +13,7 @@ class DashboardController extends Controller
 
     public function index()
     {
-        $latestInfo = Information::orderBy('created_at', 'desc')->take(5)->get();
+        $latestInfo = Information::orderBy('updated_at', 'desc')->take(5)->get();
 
         $today = Carbon::now('Asia/Jakarta')->toDateString();
 
