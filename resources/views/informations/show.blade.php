@@ -13,26 +13,27 @@
     @php
       $coverUrl = $info->cover_url;
       $created  = optional($info->created_at)->translatedFormat('d F Y');
+      $updated  = optional($info->updated_at)->translatedFormat('d F Y');
     @endphp
 
-    <div class="flex flex-wrap items-center gap-3 text-xs uppercase tracking-wide text-slate-500">
+    <div class="flex flex-wrap items-center gap-3 text-xs tracking-wide uppercase text-slate-500">
       <span class="inline-flex items-center gap-1">
         <x-heroicon-o-calendar class="w-4 h-4" />
-        {{ $created ?? 'Tanggal tidak diketahui' }}
+        {{ $updated ?? 'Tanggal tidak diketahui' }}
       </span>
       @if($info->jenis)
-        <span class="inline-flex items-center gap-1 rounded-full bg-brand-50 px-3 py-1 text-brand-700 border border-brand-100">
+        <span class="inline-flex items-center gap-1 px-3 py-1 border rounded-full bg-brand-50 text-brand-700 border-brand-100">
           {{ $info->jenis }}
         </span>
       @endif
     </div>
 
-    <h1 class="mt-4 text-2xl font-semibold text-slate-900 leading-tight">
+    <h1 class="mt-4 text-2xl font-semibold leading-tight text-slate-900">
       {{ $info->judul }}
     </h1>
 
     @if($coverUrl)
-      <div class="mt-6 overflow-hidden rounded-3xl border border-slate-200">
+      <div class="mt-6 overflow-hidden border rounded-3xl border-slate-200">
         <img src="{{ $coverUrl }}" alt="{{ $info->judul }}" class="object-cover w-full h-[360px]" loading="lazy" />
       </div>
     @endif

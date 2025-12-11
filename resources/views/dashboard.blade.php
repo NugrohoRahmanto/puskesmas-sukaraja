@@ -11,12 +11,18 @@
                 <section role="region" aria-labelledby="urutan-antrian" class="relative md:col-span-1">
                 <div class="bg-slate-100 rounded-[22px] overflow-hidden">
                     {{-- Header --}}
-                    <div class="sticky top-0 px-4 py-3 border-b bg-brand-700 border-slate-200">
+                    <div class="sticky top-0 flex items-center px-4 py-3 border-b bg-brand-700 border-slate-200">
                     <h2 id="urutan-antrian"
-                        class="text-lg font-semibold tracking-wide text-center text-white uppercase">
+                        class="text-lg font-semibold tracking-wide text-white uppercase">
                         Antrian Masuk
                     </h2>
-                    </div>
+                    <button type="button" onclick="window.location.reload()"
+                        class="ml-auto inline-flex items-center gap-2 rounded-full border border-white/30 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/10">
+                        <x-heroicon-o-arrow-path class="w-4 h-4" />
+                        Refresh
+                    </button>
+                </div>
+
 
                     @if ($queues->isEmpty())
                     <div class="px-4 py-10 text-lg font-medium text-center text-slate-600">
@@ -90,7 +96,7 @@
                                         </a>
                                     </h3>
                                     <p class="mt-1 text-[12px] tracking-wide uppercase text-slate-400">
-                                        {{ optional($info->created_at)->translatedFormat('d F Y') }}
+                                        {{ optional($info->updated_at)->translatedFormat('d F Y') }}
                                     </p>
                                     <p class="mt-2 text-sm text-slate-600 line-clamp-3">
                                         {{ Str::limit($info->isi, 200) }}
@@ -127,12 +133,18 @@
             <section role="region" aria-labelledby="urutan-antrian" class="relative md:col-span-1">
             <div class="bg-slate-100 rounded-[22px] overflow-hidden">
                 {{-- Header --}}
-                <div class="sticky top-0 px-4 py-3 border-b bg-brand-700 border-slate-200">
-                <h2 id="urutan-antrian"
-                    class="text-lg font-semibold tracking-wide text-center text-white uppercase">
-                    Antrian Masuk
-                </h2>
+                <div class="sticky top-0 flex items-center px-4 py-3 border-b bg-brand-700 border-slate-200">
+                    <h2 id="urutan-antrian"
+                        class="text-lg font-semibold tracking-wide text-white uppercase">
+                        Antrian Masuk
+                    </h2>
+                    <button type="button" onclick="window.location.reload()"
+                        class="ml-auto inline-flex items-center gap-2 rounded-full border border-white/30 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/10">
+                        <x-heroicon-o-arrow-path class="w-4 h-4" />
+                        Refresh
+                    </button>
                 </div>
+
 
                 @if ($queues->isEmpty())
                 <div class="px-4 py-10 text-lg font-medium text-center text-slate-600">
@@ -207,7 +219,7 @@
                                         </a>
                                     </h3>
                                     <p class="mt-1 text-[12px] tracking-wide uppercase text-slate-400">
-                                        {{ optional($info->created_at)->translatedFormat('d F Y') }}
+                                        {{ optional($info->updated_at)->translatedFormat('d F Y') }}
                                     </p>
                                     <p class="mt-2 text-sm text-slate-600 line-clamp-3">
                                         {{ Str::limit($info->isi, 200) }}
