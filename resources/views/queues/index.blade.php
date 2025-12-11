@@ -11,6 +11,14 @@
                 </div>
             </div>
 
+            <div class="flex justify-end mt-4">
+                <button type="button" onclick="window.location.reload()"
+                    class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-100">
+                    <x-heroicon-o-arrow-path class="w-4 h-4" />
+                    Refresh
+                </button>
+            </div>
+
             @if($queues->isEmpty())
                 <div class="px-4 py-12 text-center text-slate-600 bg-white border border-slate-200 rounded-2xl">
                     Tidak ada pasien dalam antrian saat ini.

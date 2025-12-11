@@ -31,7 +31,14 @@
     @endif
 
     <div class="flex flex-col w-full gap-3 mb-4 md:flex-row md:items-center md:justify-between">
-      <div class="text-sm font-semibold text-slate-600">Antrian Hari Ini</div>
+      <div class="flex flex-wrap items-center gap-2 text-sm font-semibold text-slate-600">
+        <span>Antrian Hari Ini</span>
+        <button type="button" onclick="window.location.reload()"
+          class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-3 py-1.5 text-xs font-normal text-slate-700 hover:bg-slate-100">
+          <x-heroicon-o-arrow-path class="w-4 h-4"/>
+          Refresh
+        </button>
+      </div>
 
       <form method="GET" action="{{ url()->current() }}"
             class="flex items-center gap-2 text-sm text-slate-600">

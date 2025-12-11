@@ -21,7 +21,7 @@ class InformationController extends Controller
         $perPage = $pagination['perPage'];
         $perPageOptions = $pagination['options'];
 
-        $query = Information::orderBy('created_at', 'desc');
+        $query = Information::orderBy('updated_at', 'desc');
 
         $infos = $perPage === 'all'
             ? $query->get()

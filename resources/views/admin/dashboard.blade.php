@@ -59,11 +59,16 @@
 
     {{-- ====== ANTRIAN HARI INI ====== --}}
     <section aria-labelledby="today-queues">
-      <div class="mb-3">
+      <div class="mb-3 flex flex-wrap items-center justify-between gap-3">
         <div class="px-5 py-1.5 inline-flex items-center gap-2 bg-white border border-slate-200 rounded-full text-[12px] text-slate-700">
           <x-heroicon-o-queue-list class="w-4 h-4"/>
           Antrian Hari Ini
         </div>
+        <button type="button" onclick="window.location.reload()"
+          class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100">
+          <x-heroicon-o-arrow-path class="w-4 h-4"/>
+          Refresh
+        </button>
       </div>
 
       @if($queues->isEmpty())

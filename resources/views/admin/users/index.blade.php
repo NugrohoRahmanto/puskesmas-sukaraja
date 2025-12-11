@@ -39,7 +39,7 @@
             <x-heroicon-o-plus class="w-5 h-5"/> Tambah Admin
             </a>
         </div>
-     
+
 
         @if (Route::has('admin.users.search'))
           <form method="GET" action="{{ route('admin.users.search') }}" class="md:w-72">

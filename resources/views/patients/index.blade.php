@@ -32,6 +32,12 @@
         Tambah Pasien
       </a>
 
+      <button type="button" onclick="window.location.reload()"
+         class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-100">
+        <x-heroicon-o-arrow-path class="w-4 h-4" />
+        Refresh
+      </button>
+
       {{-- (Opsional) Pencarian cepat --}}
       <form method="GET" action="{{ route('patients.search') }}" class="ml-auto w-full sm:w-auto">
         <div class="relative">
