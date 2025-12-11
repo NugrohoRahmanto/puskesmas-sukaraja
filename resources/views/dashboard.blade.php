@@ -101,6 +101,11 @@
                                     <p class="mt-2 text-sm text-slate-600 line-clamp-3">
                                         {{ Str::limit($info->isi, 200) }}
                                     </p>
+                                    <p class="mt-3 text-sm font-semibold text-brand-700">
+                                        <a href="{{ $detailUrl }}" class="inline-flex items-center gap-1 hover:underline">
+                                            Baca selengkapnya...
+                                        </a>
+                                    </p>
                                 </div>
                             </article>
                         @empty
@@ -223,6 +228,11 @@
                                     </p>
                                     <p class="mt-2 text-sm text-slate-600 line-clamp-3">
                                         {{ Str::limit($info->isi, 200) }}
+                                    </p>
+                                    <p class="mt-3 text-sm font-semibold text-brand-700">
+                                        <a href="{{ $detailUrl }}" class="inline-flex items-center gap-1 hover:underline">
+                                            Baca Selengkapnya...
+                                        </a>
                                     </p>
                                 </div>
                             </article>
